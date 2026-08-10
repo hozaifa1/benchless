@@ -1,0 +1,14 @@
+# Agent memory & config files (CRITICAL RULE)
+CLAUDE.md
+MEMORY.md
+.agents/
+skills-lock.json
+.gemini/
+
+# Node / Environment / Build artifacts
+node_modules/
+dist/
+.env
+.env.local
+.DS_Store
+Thumbs.db
