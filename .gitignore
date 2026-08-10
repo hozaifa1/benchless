@@ -5,6 +5,10 @@ MEMORY.md
 skills-lock.json
 .gemini/
 
+# Planning & Research docs
+PLAN.md
+2026-08-09-Build-with-Gemini-XPRIZE-deep-research.md
+
 # Node / Environment / Build artifacts
 node_modules/
 dist/
