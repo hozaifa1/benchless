@@ -9,6 +9,10 @@ skills-lock.json
 PLAN.md
 2026-08-09-Build-with-Gemini-XPRIZE-deep-research.md
 
+# Firebase / Logs
+firebase-debug.log
+*.log
+
 # Node / Environment / Build artifacts
 node_modules/
 dist/
