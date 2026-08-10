@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Ledger aggregates - publicly readable for the /ledger trust dashboard
+    match /ledger_aggregates/{document=**} {
+      allow read: if true;
+      allow write: if false; // Only server/admin SDK writes aggregates
+    }
+
+    // Decision logs - audit log for model extractions and deterministic verdicts
+    match /decision_logs/{logId} {
+      allow read, create: if true;
+      allow update, delete: if false;
+    }
+
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
