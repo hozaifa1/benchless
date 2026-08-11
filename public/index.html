@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Benchless — publish your first paper without a lab</title>
+<meta name="description" content="A guided path from a laptop-only simulation study to a submitted first-author paper at a legitimate venue. You do the research. You write it. Your name goes on it.">
+<style>
+  :root{color-scheme:light dark;--fg:#14171c;--muted:#5c6674;--bg:#fff;--line:#e4e7ec;--accent:#1a4fd6;--soft:#f6f7f9}
+  @media (prefers-color-scheme:dark){:root{--fg:#e9ecf1;--muted:#98a2b1;--bg:#0e1014;--line:#242932;--accent:#88a6ff;--soft:#161a20}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:46rem;margin:0 auto;padding:4rem 1.25rem 6rem}
+  h1{font-size:2.3rem;line-height:1.15;margin:0 0 1rem;letter-spacing:-.03em}
+  h2{font-size:1.15rem;margin:3rem 0 .75rem;letter-spacing:-.01em}
+  p{margin:0 0 1.1rem}
+  .lede{font-size:1.15rem;color:var(--muted);margin-bottom:2rem}
+  .brand{font-weight:600;letter-spacing:-.02em;margin-bottom:2.5rem;display:block}
+  ol,ul{margin:0 0 1.1rem;padding-left:1.2rem}
+  li{margin:.45rem 0}
+  .card{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:1.25rem 1.4rem;margin:1.5rem 0}
+  .honest{border-left:3px solid var(--accent);padding:.2rem 0 .2rem 1.1rem;margin:1.75rem 0}
+  form{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0 .6rem}
+  input[type=email]{flex:1 1 16rem;padding:.7rem .9rem;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:inherit}
+  button{padding:.7rem 1.3rem;border:0;border-radius:8px;background:var(--accent);color:#fff;font:inherit;font-weight:550;cursor:pointer}
+  button:disabled{opacity:.55;cursor:default}
+  .small{font-size:.9rem;color:var(--muted)}
+  a{color:var(--accent)}
+  footer{margin-top:3.5rem;padding-top:1.3rem;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+  #msg{min-height:1.4rem;font-size:.92rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <span class="brand">Benchless</span>
+
+  <h1>You don't need a lab to publish your first paper.</h1>
+  <p class="lede">Thousands of engineering students are told their research career is over before it starts, because their university has no equipment, no funding, and no one with time to supervise them. That is a resourcing problem, not a talent problem — and simulation solves it.</p>
+
+  <p>Benchless walks you from "I have a laptop and an idea" to a submitted first-author paper at a conference that actually counts. It was built by someone who did exactly that: an undergraduate in Dhaka, no lab access, accepted to IEEE EDTM.</p>
+
+  <h2>What it does</h2>
+  <ol>
+    <li><strong>Scopes a study you can actually finish.</strong> You describe your field, your background and what software you can get. It proposes simulation-based studies that are genuinely novel, genuinely runnable on your hardware, and sized to the time you have.</li>
+    <li><strong>Checks the venue before you waste a year on it.</strong> Predatory conferences and journals take your money and quietly damage your applications. Every venue is checked against public indexing records, and the reasoning is shown to you.</li>
+    <li><strong>Gives you the structure.</strong> A submission timeline with real dates, the sections a reviewer expects in your subfield, and a LaTeX kit that matches the venue's template.</li>
+  </ol>
+
+  <div class="honest">
+    <p style="margin:0"><strong>What it will never do is write your paper.</strong> There is a whole industry selling authorship — ghostwritten manuscripts placed in compromised journals for a fee. That is fraud, it is detectable, and it ends careers. Benchless teaches you the method and checks your work. The research is yours, the writing is yours, and your name on it means something.</p>
+  </div>
+
+  <h2>Get early access</h2>
+  <p class="small">First cohort opens shortly. Leave your email and I'll send the free walkthrough of the exact method — no payment, no obligation.</p>
+  <form id="f">
+    <input type="email" id="email" placeholder="you@university.edu" required autocomplete="email">
+    <button type="submit" id="btn">Send it to me</button>
+  </form>
+  <div id="msg"></div>
+
+  <div class="card">
+    <p style="margin:0 0 .5rem"><strong>First Paper Kit — $29</strong></p>
+    <p class="small" style="margin:0">The study scoping worksheet, the LaTeX submission kit, and the vetted venue shortlist for your subfield. One-time. Available when the first cohort opens.</p>
+  </div>
+
+  <footer>
+    <p>Built in Dhaka, Bangladesh · <a href="https://github.com/hozaifa1/benchless">Source on GitHub</a></p>
+    <p>Benchless is a research-methods teaching tool. It does not write, submit, or co-author your work, and it is not affiliated with any publisher or conference.</p>
+  </footer>
+</main>
+<script>
+const f=document.getElementById('f'),btn=document.getElementById('btn'),msg=document.getElementById('msg');
+f.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const email=document.getElementById('email').value.trim();
+  if(!email) return;
+  btn.disabled=true; msg.textContent='Saving…';
+  try{
+    const r=await fetch('https://firestore.googleapis.com/v1/projects/benchless-app/databases/(default)/documents/signups',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({fields:{email:{stringValue:email},created:{timestampValue:new Date().toISOString()},source:{stringValue:location.pathname}}})
+    });
+    if(!r.ok) throw new Error(r.status);
+    msg.textContent='Got it. Check your inbox in the next day or two.';
+    f.reset();
+  }catch(err){
+    msg.textContent='That did not save. Email 20hozaifa02@gmail.com and I will add you manually.';
+  }finally{ btn.disabled=false; }
+});
+</script>
+</body>
+</html>
