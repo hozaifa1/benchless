@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   VERDICTS, normalise, shardOf, issnDigits, verdictFor, toEvidence, REFUSAL
 } from '../public/js/venue-core.mjs';
@@ -99,7 +99,11 @@ function selfcheck() {
   console.log('\nAll venue-checker self-checks passed.');
 }
 
-const arg = process.argv[2];
-if (arg === '--selfcheck') selfcheck();
-else if (!arg) console.error('usage: node scripts/check_venue.mjs "<venue name or ISSN>" | --selfcheck');
-else console.log(JSON.stringify(checkVenue(arg), null, 2));
+// Only act as a CLI when run directly. build_kit_shortlist.mjs imports checkVenue from
+// here, and a bare import must not print usage or exit.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const arg = process.argv[2];
+  if (arg === '--selfcheck') selfcheck();
+  else if (!arg) console.error('usage: node scripts/check_venue.mjs "<venue name or ISSN>" | --selfcheck');
+  else console.log(JSON.stringify(checkVenue(arg), null, 2));
+}

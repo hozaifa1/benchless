@@ -75,6 +75,15 @@
   <div id="status" class="spin" aria-live="polite"></div>
   <div id="out"></div>
 
+  <div class="card" style="margin-top:2.5rem">
+    <p style="margin:0 0 .4rem"><strong>First Paper Kit, $29</strong></p>
+    <p class="small" style="margin:0 0 .9rem">This page scopes and checks. The kit is the part that gets you to a submission: the scoping worksheet with the feasibility and validation gates, a commented LaTeX submission kit, and 40 venues checked against the same indexing records used above, grouped by subfield with the evidence shown.</p>
+    <div style="display:flex;gap:.7rem;align-items:center;flex-wrap:wrap">
+      <button type="button" id="buy">Get the kit — $29</button>
+      <span class="small" id="buymsg"></span>
+    </div>
+  </div>
+
   <footer>
     <p id="legal"><strong>Benchless teaches the method and checks the work.</strong> It does not write, submit, or co-author anything. What you send to a venue is yours, and you are responsible for it. Venue verdicts are lookups against public indexing records, shown with their source so you can verify them yourself. They are not endorsements, and an <em>indexed</em> result is not advice to submit.</p>
     <p class="small">No affiliation with any publisher or conference. <a href="index.html">Home</a> · <a href="https://github.com/hozaifa1/benchless">Source</a></p>
@@ -191,6 +200,25 @@ function renderTimeline(weeks, rows) {
     </table>
     <div class="honest"><p style="margin:0">You write it. You submit it. Benchless checked the venue record and did the arithmetic, and that is the whole of what it did.</p></div>`;
 }
+
+// Checkout is created server-side: the Polar key stays off this page, and the product and
+// price are fixed there rather than chosen here.
+$('buy').addEventListener('click', async () => {
+  const b = $('buy'), m = $('buymsg');
+  b.disabled = true; m.textContent = 'Opening checkout…';
+  try {
+    const r = await fetch('https://benchless.vercel.app/api/checkout', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ source: 'app', referrer: document.referrer || '' })
+    });
+    const d = await r.json();
+    if (!r.ok || !d.url) throw new Error(d.error || 'Checkout could not be opened.');
+    location.href = d.url;
+  } catch (err) {
+    m.innerHTML = `<span class="err">${esc(err.message)}</span> Email 20hozaifa02@gmail.com and I'll send a link.`;
+    b.disabled = false;
+  }
+});
 
 $('intake').addEventListener('submit', async e => {
   e.preventDefault();

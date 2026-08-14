@@ -68,8 +68,31 @@
 
   <div class="card">
     <p style="margin:0 0 .4rem"><strong>Want to scope a research project you can finish?</strong></p>
-    <p style="margin:0">Benchless helps you scope software-based projects, verify venue indexing, and set up your submission kit. <a href="index.html">Learn more on the home page.</a></p>
+    <p style="margin:0 0 .8rem">Scope a study and check a venue free, <a href="app.html">here</a>. Or get the <strong>First Paper Kit</strong> for $29: the scoping worksheet with the feasibility and validation gates that most first studies fail late, a commented LaTeX submission kit, and 40 venues checked against public indexing records with the evidence shown.</p>
+    <div style="display:flex;gap:.7rem;align-items:center;flex-wrap:wrap">
+      <button type="button" id="buy" style="padding:.6rem 1.1rem;border:0;border-radius:8px;background:var(--accent);color:#fff;font:inherit;font-weight:550;cursor:pointer">Get the kit — $29</button>
+      <span style="font-size:.9rem;color:var(--muted)" id="buymsg"></span>
+    </div>
   </div>
+
+  <script>
+  const b=document.getElementById('buy'),m=document.getElementById('buymsg');
+  b.addEventListener('click',async()=>{
+    b.disabled=true; m.textContent='Opening checkout…';
+    try{
+      const r=await fetch('https://benchless.vercel.app/api/checkout',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({source:'walkthrough',referrer:document.referrer||''})
+      });
+      const d=await r.json();
+      if(!r.ok||!d.url) throw new Error(d.error||'Checkout could not be opened.');
+      location.href=d.url;
+    }catch(err){
+      m.textContent=err.message+' Email 20hozaifa02@gmail.com.';
+      b.disabled=false;
+    }
+  });
+  </script>
 
   <footer>
     <p>Built by Hozaifa Hossain in Dhaka, Bangladesh. <a href="index.html">Home</a> · <a href="https://github.com/hozaifa1/benchless">Source Code</a></p>

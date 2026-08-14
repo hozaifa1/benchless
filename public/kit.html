@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Your First Paper Kit — Benchless</title>
+<style>
+  :root{color-scheme:light dark;--fg:#14171c;--muted:#5c6674;--bg:#fff;--line:#e4e7ec;--accent:#1a4fd6;--soft:#f6f7f9;--ok:#0a7d4a;--warn:#b3520a;--bad:#b3251f}
+  @media (prefers-color-scheme:dark){:root{--fg:#e9ecf1;--muted:#98a2b1;--bg:#0e1014;--line:#242932;--accent:#88a6ff;--soft:#161a20;--ok:#4ac98a;--warn:#e8a25c;--bad:#f0776f}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:48rem;margin:0 auto;padding:3rem 1.25rem 6rem}
+  h1{font-size:1.95rem;line-height:1.2;margin:0 0 .5rem;letter-spacing:-.03em}
+  h2{font-size:1.25rem;margin:3rem 0 .5rem;letter-spacing:-.02em;padding-top:1.4rem;border-top:1px solid var(--line)}
+  h3{font-size:1.02rem;margin:1.8rem 0 .3rem}
+  p{margin:0 0 1rem}
+  .brand{font-weight:600;letter-spacing:-.02em;margin-bottom:2rem;display:block;text-decoration:none;color:var(--fg)}
+  .small{font-size:.9rem;color:var(--muted)}
+  .card{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.3rem;margin:1rem 0}
+  .honest{border-left:3px solid var(--accent);padding:.3rem 0 .3rem 1.1rem;margin:1.6rem 0;font-size:.94rem}
+  button{padding:.6rem 1.1rem;border:0;border-radius:8px;background:var(--accent);color:#fff;font:inherit;font-weight:550;cursor:pointer}
+  button.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+  button:disabled{opacity:.5;cursor:default}
+  a{color:var(--accent)}
+  label{display:block;font-size:.93rem;font-weight:550;margin:1rem 0 .2rem}
+  .hint{font-size:.85rem;color:var(--muted);margin:0 0 .35rem}
+  textarea{width:100%;padding:.6rem .75rem;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:inherit;resize:vertical}
+  .gate{border-left:3px solid var(--warn);background:var(--soft);padding:.7rem 1rem;margin:1rem 0;font-size:.92rem;border-radius:0 8px 8px 0}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;margin:.5rem 0 1.5rem}
+  th,td{text-align:left;padding:.45rem .55rem;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;color:var(--muted);font-size:.82rem}
+  .bar{font-size:.78rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase}
+  .bar-reach{color:var(--bad)} .bar-realistic{color:var(--warn)} .bar-accessible{color:var(--ok)}
+  pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:.9rem;overflow-x:auto;font-size:.8rem;line-height:1.5;max-height:22rem}
+  .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin:.5rem 0}
+  .status{font-size:.93rem;color:var(--muted);min-height:1.4rem}
+  .err{color:var(--bad)}
+  details{margin:.6rem 0}
+  summary{cursor:pointer;font-weight:550;font-size:.95rem}
+  footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+  .saved{font-size:.82rem;color:var(--ok)}
+</style>
+</head>
+<body>
+<main>
+  <a href="index.html" class="brand">← Benchless</a>
+  <div id="root"><p class="status" id="status">Checking your order…</p></div>
+  <footer>
+    <p><strong>Benchless teaches the method and checks the work.</strong> It does not write, submit, or co-author anything. What you send to a venue is yours, and you are responsible for it.</p>
+    <p class="small">Questions, or something wrong with your order? Email <a href="mailto:20hozaifa02@gmail.com">20hozaifa02@gmail.com</a> and I will answer personally.</p>
+  </footer>
+</main>
+
+<script type="module">
+const API = 'https://benchless.vercel.app/api';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+const params = new URLSearchParams(location.search);
+const checkoutId = params.get('checkout_id');
+const orderId = params.get('order_id');
+const ref = checkoutId ? `checkout_id=${encodeURIComponent(checkoutId)}` : orderId ? `order_id=${encodeURIComponent(orderId)}` : null;
+
+// Worksheet answers are kept in this browser only. They are the student's notes about
+// unpublished work and there is no reason for them to reach a server, so they do not.
+const STORE = 'benchless.worksheet.v1';
+const answers = JSON.parse(localStorage.getItem(STORE) || '{}');
+const save = () => localStorage.setItem(STORE, JSON.stringify(answers));
+
+if (!ref) {
+  showNoAccess('This page needs the link from your receipt. Open the kit from the link you were redirected to after paying, or from your Polar receipt email.');
+} else {
+  load();
+}
+
+async function load(attempt = 0) {
+  try {
+    const r = await fetch(`${API}/kit?${ref}`);
+    const data = await r.json();
+
+    if (r.status === 202 && attempt < 10) {
+      $('status').textContent = data.error || 'Finishing up…';
+      setTimeout(() => load(attempt + 1), data.retryAfterMs || 2000);
+      return;
+    }
+    if (!r.ok) return showNoAccess(data.error || `Could not confirm your order (${r.status}).`, data.state);
+
+    render(data);
+  } catch (e) {
+    showNoAccess('Could not reach the server. Check your connection and reload.');
+  }
+}
+
+function showNoAccess(message, state) {
+  const buy = state === 'unpaid' || state === 'expired' || !state;
+  $('root').innerHTML = `
+    <h1>Your First Paper Kit</h1>
+    <div class="card">
+      <p style="margin:0 0 .6rem"><strong>${esc(message)}</strong></p>
+      <p class="small" style="margin:0">If you paid and this still says otherwise, email
+        <a href="mailto:20hozaifa02@gmail.com">20hozaifa02@gmail.com</a> with your receipt and I will sort it out the same day.</p>
+    </div>
+    ${buy ? `<div class="row"><button id="buy">Get the kit — $29</button></div><div class="status" id="buystatus"></div>` : ''}`;
+  if (buy) wireBuy();
+}
+
+function wireBuy() {
+  const btn = $('buy');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    $('buystatus').textContent = 'Opening checkout…';
+    try {
+      const r = await fetch(`${API}/checkout`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source: 'kit-page', referrer: document.referrer || '' })
+      });
+      const d = await r.json();
+      if (!r.ok || !d.url) throw new Error(d.error || 'Checkout failed');
+      location.href = d.url;
+    } catch (e) {
+      $('buystatus').innerHTML = `<span class="err">${esc(e.message)}</span>`;
+      btn.disabled = false;
+    }
+  });
+}
+
+function render({ kit, purchasedBy }) {
+  const w = kit.worksheet;
+
+  $('root').innerHTML = `
+    <h1>Your First Paper Kit</h1>
+    <p class="small">${purchasedBy ? `Unlocked for ${esc(purchasedBy)}. ` : ''}Bookmark this page — the link in your address bar is how you get back in.</p>
+
+    <div class="honest">
+      <p style="margin:0">Three things are in here: the scoping worksheet, the LaTeX submission kit, and ${kit.venues.total} venues checked against public indexing records. Start with the worksheet. It is the part that saves you a semester.</p>
+    </div>
+
+    <h2>1 · ${esc(w.title)}</h2>
+    <p>${esc(w.subtitle)}</p>
+    <p class="small">${esc(w.howToUse)}</p>
+    <div class="row">
+      <button id="exportWs" class="ghost">Download my answers (Markdown)</button>
+      <span class="saved" id="savedNote"></span>
+    </div>
+    <form id="wsForm">${w.sections.map(sec => `
+      <h3>${esc(sec.title)}</h3>
+      <p class="hint">${esc(sec.why)}</p>
+      ${sec.gate ? `<div class="gate"><strong>Gate.</strong> ${esc(sec.gate)}</div>` : ''}
+      ${sec.prompts.map(p => `
+        <label for="w_${esc(p.id)}">${esc(p.label)}</label>
+        ${p.hint ? `<p class="hint">${esc(p.hint)}</p>` : ''}
+        <textarea id="w_${esc(p.id)}" data-k="${esc(p.id)}" rows="${p.lines || 2}">${esc(answers[p.id] || '')}</textarea>
+      `).join('')}
+    `).join('')}</form>
+    <p class="small" style="margin-top:1rem">${esc(w.closing)}</p>
+    <p class="small">Your answers stay in this browser. They are notes about unpublished work, so they are never sent anywhere.</p>
+
+    <h2>2 · LaTeX submission kit</h2>
+    <p class="small">Four files. Upload <code>main.tex</code> and <code>refs.bib</code> to Overleaf together, set the compiler to pdfLaTeX, and you have a compiling paper in five minutes.</p>
+    <div class="row"><button id="dlAll" class="ghost">Download all four files</button></div>
+    ${kit.latex.files.map((f, i) => `
+      <details ${i === 0 ? 'open' : ''}>
+        <summary>${esc(f.name)} — ${esc(f.description)}</summary>
+        <div class="row">
+          <button class="ghost" data-copy="${i}">Copy</button>
+          <button class="ghost" data-dl="${i}">Download ${esc(f.name)}</button>
+        </div>
+        <pre>${esc(f.content)}</pre>
+      </details>`).join('')}
+
+    <h2>3 · Vetted venue shortlist</h2>
+    <p class="small">${esc(kit.venues.method)}</p>
+    <div class="gate">${esc(kit.venues.caveat)}</div>
+    <p class="small">Index built ${esc((kit.shortlistBuiltAt || '').slice(0, 10))}.</p>
+    ${kit.venues.groups.map(g => `
+      <h3>${esc(g.title)}</h3>
+      <table>
+        <tr><th>Venue</th><th>Bar</th><th>Fit — my judgement</th><th>Evidence</th></tr>
+        ${g.venues.map(v => `<tr>
+          <td><strong>${esc(v.name)}</strong><br><span class="small">${esc(v.type)}</span></td>
+          <td><span class="bar bar-${esc(v.bar)}">${esc(v.bar)}</span></td>
+          <td>${esc(v.fit)}</td>
+          <td>${v.evidence.map(e => `<a href="${esc(e.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(e.source)}</a>`).join('<br>')}</td>
+        </tr>`).join('')}
+      </table>`).join('')}`;
+
+  wireWorksheet();
+  wireLatex(kit.latex.files);
+}
+
+function wireWorksheet() {
+  $('wsForm').addEventListener('input', e => {
+    const k = e.target.dataset.k;
+    if (!k) return;
+    answers[k] = e.target.value;
+    save();
+    $('savedNote').textContent = 'Saved in this browser';
+  });
+  $('exportWs').addEventListener('click', () => {
+    const lines = ['# Benchless Scoping Worksheet', '', `Exported ${new Date().toISOString().slice(0, 10)}`, ''];
+    document.querySelectorAll('#wsForm textarea').forEach(t => {
+      const label = t.previousElementSibling?.classList.contains('hint')
+        ? t.previousElementSibling.previousElementSibling
+        : t.previousElementSibling;
+      lines.push(`## ${label ? label.textContent : t.dataset.k}`, '', (t.value || '_(not filled in)_'), '');
+    });
+    download('scoping-worksheet.md', lines.join('\n'), 'text/markdown');
+  });
+}
+
+function wireLatex(files) {
+  document.querySelectorAll('[data-dl]').forEach(b => b.addEventListener('click', () => {
+    const f = files[Number(b.dataset.dl)];
+    download(f.name, f.content, 'text/plain');
+  }));
+  document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(files[Number(b.dataset.copy)].content);
+    const t = b.textContent; b.textContent = 'Copied'; setTimeout(() => { b.textContent = t; }, 1500);
+  }));
+  $('dlAll').addEventListener('click', () => files.forEach((f, i) => setTimeout(() => download(f.name, f.content, 'text/plain'), i * 250)));
+}
+
+function download(name, content, type) {
+  const url = URL.createObjectURL(new Blob([content], { type }));
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+</script>
+</body>
+</html>
