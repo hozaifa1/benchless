@@ -3,11 +3,32 @@ const { getFirestore, doc, writeBatch } = require('firebase/firestore');
 const fs = require('fs');
 const path = require('path');
 
-const firebaseConfig = {
-  projectId: "benchless-app",
-  appId: "1:561247944900:web:c1287d107f29b551a74991",
-  apiKey: "AIzaSyC6txlBro2VPALcFRdTy1v8Y_Zl74feMhg"
-};
+function getFirebaseConfig() {
+  let apiKey = process.env.FIREBASE_API_KEY || "";
+  let projectId = process.env.FIREBASE_PROJECT_ID || "benchless-app";
+  let appId = process.env.FIREBASE_APP_ID || "";
+
+  const envPath = path.join(__dirname, '..', '.env');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    if (!apiKey) {
+      const match = envContent.match(/^FIREBASE_API_KEY=(.+)$/m);
+      if (match) apiKey = match[1].trim();
+    }
+    if (!projectId) {
+      const match = envContent.match(/^FIREBASE_PROJECT_ID=(.+)$/m);
+      if (match) projectId = match[1].trim();
+    }
+    if (!appId) {
+      const match = envContent.match(/^FIREBASE_APP_ID=(.+)$/m);
+      if (match) appId = match[1].trim();
+    }
+  }
+
+  return { projectId, appId, apiKey };
+}
+
+const firebaseConfig = getFirebaseConfig();
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
