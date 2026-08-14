@@ -1,0 +1,57 @@
+[
+  {
+    "id": "ieee-edtm",
+    "name": "IEEE International Conference on Electron Devices Technology and Manufacturing (EDTM)",
+    "publisher": "IEEE",
+    "isLegitimate": true,
+    "indexingStatus": "Indexed in IEEE Xplore & Scopus",
+    "verificationUrl": "https://ieee-edtm.org",
+    "notes": "Top-tier flagship IEEE EDS conference covering semiconductor devices, nanophotonics, and manufacturing.",
+    "issnOrIsbn": "2474-0543",
+    "type": "conference"
+  },
+  {
+    "id": "ieee-tcad",
+    "name": "IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems",
+    "publisher": "IEEE",
+    "isLegitimate": true,
+    "indexingStatus": "Indexed in IEEE Xplore, Scopus, Web of Science (SCI-E)",
+    "verificationUrl": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=43",
+    "notes": "Premier Q1 IEEE journal and hackathon sponsor for electronic design automation and TCAD device modeling.",
+    "issnOrIsbn": "0278-0070",
+    "type": "journal"
+  },
+  {
+    "id": "ieee-ted",
+    "name": "IEEE Transactions on Electron Devices",
+    "publisher": "IEEE",
+    "isLegitimate": true,
+    "indexingStatus": "Indexed in IEEE Xplore, Scopus, Web of Science (SCI-E)",
+    "verificationUrl": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=16",
+    "notes": "Gold-standard Q1 journal for semiconductor device physics, photovoltaics, and microelectronics.",
+    "issnOrIsbn": "0018-9383",
+    "type": "journal"
+  },
+  {
+    "id": "ijcrar-predatory",
+    "name": "International Journal of Current Research and Academic Review (IJCRAR)",
+    "publisher": "Excellence Publishers",
+    "isLegitimate": false,
+    "indexingStatus": "NOT indexed in DOAJ, Scopus, or Web of Science",
+    "verificationUrl": "https://beallslist.net",
+    "notes": "Known pay-to-publish predatory journal with unvetted fast-track fake peer review.",
+    "issnOrIsbn": "2347-3215",
+    "type": "journal"
+  },
+  {
+    "id": "waset-clone-predatory",
+    "name": "World Academy of Science, Engineering and Technology (WASET) Conferences",
+    "publisher": "WASET",
+    "isLegitimate": false,
+    "indexingStatus": "NOT indexed in IEEE Xplore or Scopus",
+    "verificationUrl": "https://beallslist.net",
+    "notes": "Infamous vanity conference organizer generating hundreds of fake parallel conferences with guaranteed publication.",
+    "issnOrIsbn": "2010-376X",
+    "type": "conference"
+  }
+]

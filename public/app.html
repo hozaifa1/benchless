@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scope a study and check the venue — Benchless</title>
+<meta name="description" content="Describe your field, background and available software. Get simulation studies sized to the time you have, and a deterministic check on whether the venue you're aiming at is indexed anywhere real.">
+<style>
+  :root{color-scheme:light dark;--fg:#14171c;--muted:#5c6674;--bg:#fff;--line:#e4e7ec;--accent:#1a4fd6;--soft:#f6f7f9;--ok:#0a7d4a;--warn:#b3520a;--bad:#b3251f}
+  @media (prefers-color-scheme:dark){:root{--fg:#e9ecf1;--muted:#98a2b1;--bg:#0e1014;--line:#242932;--accent:#88a6ff;--soft:#161a20;--ok:#4ac98a;--warn:#e8a25c;--bad:#f0776f}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:46rem;margin:0 auto;padding:3rem 1.25rem 6rem}
+  h1{font-size:1.9rem;line-height:1.2;margin:0 0 .6rem;letter-spacing:-.03em}
+  h2{font-size:1.1rem;margin:2.6rem 0 .7rem;letter-spacing:-.01em}
+  h3{font-size:1rem;margin:0 0 .35rem}
+  p{margin:0 0 1rem}
+  .brand{font-weight:600;letter-spacing:-.02em;margin-bottom:2rem;display:block;text-decoration:none;color:var(--fg)}
+  label{display:block;font-size:.9rem;font-weight:550;margin:0 0 .3rem}
+  input,textarea,select{width:100%;padding:.65rem .8rem;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:inherit}
+  textarea{min-height:4.5rem;resize:vertical}
+  .row{display:grid;gap:1rem;grid-template-columns:1fr 1fr;margin:0 0 1rem}
+  .field{margin:0 0 1rem}
+  button{padding:.7rem 1.3rem;border:0;border-radius:8px;background:var(--accent);color:#fff;font:inherit;font-weight:550;cursor:pointer}
+  button:disabled{opacity:.5;cursor:default}
+  .card{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.3rem;margin:1rem 0}
+  .honest{border-left:3px solid var(--accent);padding:.3rem 0 .3rem 1.1rem;margin:1.6rem 0;font-size:.93rem}
+  .small{font-size:.9rem;color:var(--muted)}
+  .verdict{font-weight:650;letter-spacing:.02em}
+  .v-INDEXED{color:var(--ok)} .v-FLAGGED,.v-DELISTED{color:var(--bad)} .v-UNKNOWN{color:var(--warn)}
+  table{border-collapse:collapse;width:100%;font-size:.92rem;margin:.6rem 0}
+  th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;color:var(--muted);font-size:.85rem}
+  a{color:var(--accent)}
+  ol{padding-left:1.2rem}
+  footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+  .spin{color:var(--muted);font-size:.93rem}
+  .err{color:var(--bad);font-size:.93rem}
+  @media(max-width:34rem){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+  <a href="index.html" class="brand">← Benchless</a>
+
+  <h1>Scope a study. Check the venue.</h1>
+  <p class="small">Two different jobs, done two different ways. Study proposals come from a model, because "is this worth doing and can you finish it" is judgement. The venue verdict is a database lookup with the record shown, because a model must never be the thing that tells you a conference is real.</p>
+
+  <form id="intake">
+    <div class="field">
+      <label for="field">Your field, as specifically as you can put it</label>
+      <input id="field" required placeholder="e.g. ferroelectric FET device simulation, or perovskite solar cell optics">
+    </div>
+    <div class="field">
+      <label for="background">Your background</label>
+      <textarea id="background" placeholder="e.g. final-year EEE undergrad, comfortable with Python, took a semiconductor devices course, no lab access"></textarea>
+    </div>
+    <div class="field">
+      <label for="software">Software you can actually get hold of</label>
+      <textarea id="software" placeholder="e.g. Sentaurus TCAD on my university's licence, Python, COMSOL student edition"></textarea>
+    </div>
+    <div class="row">
+      <div>
+        <label for="weeks">Weeks you realistically have</label>
+        <input id="weeks" type="number" min="1" max="52" value="12" required>
+      </div>
+      <div>
+        <label for="venue">Venue you're considering (optional)</label>
+        <input id="venue" placeholder="conference or journal name, or ISSN">
+      </div>
+    </div>
+    <button id="go" type="submit">Scope it</button>
+  </form>
+
+  <div id="status" class="spin" aria-live="polite"></div>
+  <div id="out"></div>
+
+  <footer>
+    <p id="legal"><strong>Benchless teaches the method and checks the work.</strong> It does not write, submit, or co-author anything. What you send to a venue is yours, and you are responsible for it. Venue verdicts are lookups against public indexing records, shown with their source so you can verify them yourself. They are not endorsements, and an <em>indexed</em> result is not advice to submit.</p>
+    <p class="small">No affiliation with any publisher or conference. <a href="index.html">Home</a> · <a href="https://github.com/hozaifa1/benchless">Source</a></p>
+  </footer>
+</main>
+
+<script type="module">
+import { checkVenue } from './js/venue-browser.mjs';
+
+// Serverless proxy on Vercel. The Gemini key lives behind this endpoint, never in the
+// browser and never in this public repo. The site itself stays on Firebase Hosting.
+const SCOPE_API = 'https://benchless.vercel.app/api/scope';
+const LOG_URL = 'https://firestore.googleapis.com/v1/projects/benchless-app/databases/(default)/documents/decision_logs';
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Every decision is logged: the model ones and the deterministic ones alike, so the record
+// shows which is which. Append-only by the Firestore rules. Failing to log must never
+// block a student from getting their answer.
+async function logDecision({ decisionType, model, input, output }) {
+  try {
+    await fetch(LOG_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fields: {
+          timestamp: { timestampValue: new Date().toISOString() },
+          decision_type: { stringValue: decisionType },
+          model: { stringValue: model },
+          input_hash: { stringValue: await sha256(JSON.stringify(input)) },
+          output: { stringValue: JSON.stringify(output).slice(0, 8000) },
+          human_intervened: { booleanValue: false }
+        }
+      })
+    });
+  } catch (e) {
+    console.warn('decision log failed', e);
+  }
+}
+
+// Dates are computed, never proposed by a model.
+function timeline(weeks, startDate = new Date()) {
+  const stages = [
+    [0.15, 'Literature scan done, question locked'],
+    [0.35, 'Model built and sanity-checked against something published'],
+    [0.60, 'Study runs complete, results frozen'],
+    [0.80, 'Full draft written'],
+    [0.92, 'Revised after your own review pass'],
+    [1.00, 'Submitted']
+  ];
+  const days = weeks * 7;
+  return stages.map(([frac, label]) => {
+    const d = new Date(startDate);
+    d.setDate(d.getDate() + Math.round(days * frac));
+    return { date: d.toISOString().slice(0, 10), label };
+  });
+}
+
+function renderVenue(v) {
+  const note = {
+    INDEXED: 'Found in an indexing record. That means the venue exists and is indexed, not that it is a good fit or that you should submit.',
+    FLAGGED: 'This venue appears on a public predatory list. Read the listing yourself before going near it.',
+    DELISTED: 'This venue was indexed by Scopus and was removed. Find out why before submitting.',
+    UNKNOWN: 'Benchless will not guess. Not finding it here does not prove it is fake, it proves we have no record. Check the sponsoring society and prior proceedings yourself.'
+  }[v.verdict];
+
+  const rows = v.evidence.map(e => `<tr>
+      <td>${esc(e.title)}</td><td>${esc(e.status)}</td>
+      <td><a href="${esc(e.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(e.source)}</a></td>
+    </tr>`).join('');
+
+  const looks = (v.lookalikes || []).length
+    ? `<p class="small"><strong>Careful:</strong> similar names on predatory lists — ${v.lookalikes.map(l => `<a href="${esc(l.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(l.title)}</a>`).join(', ')}</p>`
+    : '';
+
+  return `<h2>Venue check</h2>
+    <div class="card">
+      <p style="margin:0 0 .4rem">${esc(v.query)} — <span class="verdict v-${esc(v.verdict)}">${esc(v.verdict)}</span></p>
+      <p class="small" style="margin:0 0 .5rem">${esc(v.reason || note)}</p>
+      ${rows ? `<table><tr><th>Record</th><th>Status</th><th>Source</th></tr>${rows}</table><p class="small" style="margin:.3rem 0 0">${esc(note)}</p>` : ''}
+      ${looks}
+    </div>`;
+}
+
+function renderProposals(s) {
+  const dropped = s.droppedOverBudget
+    ? `<p class="small">${s.droppedOverBudget} proposal(s) came back longer than your ${s.weeksBudget} weeks and were dropped. A study you cannot finish is not a study.</p>`
+    : '';
+  const items = s.proposals.map(p => `<div class="card">
+      <h3>${esc(p.title)}</h3>
+      <p class="small" style="margin:0 0 .6rem">${esc(p.weeksEstimate)} weeks · runs on what you have</p>
+      <p><strong>Question.</strong> ${esc(p.question)}</p>
+      <p><strong>Why it might be new.</strong> ${esc(p.whyNovel)}</p>
+      <p><strong>How you'd do it.</strong> ${esc(p.method)}</p>
+      <p><strong>Why it fits your setup.</strong> ${esc(p.runnableOn)}</p>
+      <p style="margin:0"><strong>How it fails.</strong> ${esc(p.riskItFails)}</p>
+    </div>`).join('');
+  return `<h2>Study proposals</h2>
+    <p class="small">Proposed by ${esc(s.model)}. These are starting points to argue with, not a plan to follow. Check the novelty claim yourself before you commit months to one.</p>
+    ${dropped}${items}`;
+}
+
+function renderTimeline(weeks, rows) {
+  return `<h2>Submission timeline</h2>
+    <p class="small">Computed from today and your ${weeks} weeks. Dates are arithmetic, not a model's opinion.</p>
+    <table><tr><th>Date</th><th>Milestone</th></tr>
+      ${rows.map(r => `<tr><td>${esc(r.date)}</td><td>${esc(r.label)}</td></tr>`).join('')}
+    </table>
+    <div class="honest"><p style="margin:0">You write it. You submit it. Benchless checked the venue record and did the arithmetic, and that is the whole of what it did.</p></div>`;
+}
+
+$('intake').addEventListener('submit', async e => {
+  e.preventDefault();
+  const go = $('go'), out = $('out'), status = $('status');
+  const input = {
+    field: $('field').value.trim(),
+    background: $('background').value.trim(),
+    software: $('software').value.trim(),
+    weeks: Math.min(52, Math.max(1, Number($('weeks').value) || 12))
+  };
+  const venueQuery = $('venue').value.trim();
+
+  go.disabled = true; out.innerHTML = ''; status.textContent = 'Checking the venue…';
+  let html = '';
+
+  // Venue first: it is instant, deterministic, and it is the part that can stop you
+  // spending a year on the wrong target.
+  if (venueQuery) {
+    try {
+      const v = await checkVenue(venueQuery);
+      html += renderVenue(v);
+      logDecision({ decisionType: 'venue_check', model: 'none (deterministic lookup)', input: { venueQuery }, output: v });
+    } catch (err) {
+      html += `<p class="err">Venue index did not load: ${esc(err.message)}</p>`;
+    }
+    out.innerHTML = html;
+  }
+
+  status.textContent = 'Scoping studies… this takes a few seconds.';
+  try {
+    const r = await fetch(SCOPE_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input)
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || `Scoping failed (${r.status})`);
+    html += renderProposals(data);
+    logDecision({ decisionType: 'study_scoping', model: data.model, input, output: data.proposals });
+  } catch (err) {
+    html += `<p class="err">${esc(err.message)}</p>`;
+  }
+
+  const rows = timeline(input.weeks);
+  html += renderTimeline(input.weeks, rows);
+  logDecision({ decisionType: 'submission_timeline', model: 'none (computed)', input: { weeks: input.weeks }, output: rows });
+
+  status.textContent = '';
+  out.innerHTML = html;
+  go.disabled = false;
+});
+</script>
+</body>
+</html>

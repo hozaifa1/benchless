@@ -8,14 +8,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hozaifa1/admituntil.git"
+    "url": "git+https://github.com/hozaifa1/benchless.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/hozaifa1/admituntil/issues"
+    "url": "https://github.com/hozaifa1/benchless/issues"
   },
-  "homepage": "https://github.com/hozaifa1/admituntil#readme"
+  "homepage": "https://github.com/hozaifa1/benchless#readme",
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "csv-parse": "^7.0.2",
+    "firebase": "^12.17.1",
+    "firebase-admin": "^14.2.0",
+    "xlsx": "^0.18.5"
+  }
 }

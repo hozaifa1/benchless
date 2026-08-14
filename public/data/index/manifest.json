@@ -1,0 +1,17 @@
+{
+  "builtAt": "2026-08-12T23:05:12.761Z",
+  "shards": 256,
+  "entries": 86800,
+  "uniqueTitles": 76390,
+  "issns": 74910,
+  "acronyms": 2347,
+  "sources": {
+    "DOAJ": 21361,
+    "Scopus": 48820,
+    "OpenAlex (IEEE)": 585,
+    "Scopus conference proceedings": 12080,
+    "Beall's List": 2782,
+    "Scopus discontinued — Discontinuation": 1006,
+    "Scopus discontinued — Journal change policy": 166
+  }
+}

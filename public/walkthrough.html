@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Honest Walkthrough: How I Won the IEEE TCAD Hackathon from Dhaka with No Lab</title>
+<meta name="description" content="How an undergraduate in Dhaka won the IEEE TCAD Hackathon 2026 using laptop simulation, CLI automation, and a Python optimization loop, with no lab access.">
+<style>
+  :root{color-scheme:light dark;--fg:#14171c;--muted:#5c6674;--bg:#fff;--line:#e4e7ec;--accent:#1a4fd6;--soft:#f6f7f9}
+  @media (prefers-color-scheme:dark){:root{--fg:#e9ecf1;--muted:#98a2b1;--bg:#0e1014;--line:#242932;--accent:#88a6ff;--soft:#161a20}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 border-box ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:44rem;margin:0 auto;padding:3.5rem 1.25rem 5rem}
+  h1{font-size:2.1rem;line-height:1.2;margin:0 0 1rem;letter-spacing:-.03em}
+  h2{font-size:1.2rem;margin:2.2rem 0 .6rem;letter-spacing:-.01em}
+  p{margin:0 0 1rem}
+  .brand{font-weight:600;letter-spacing:-.02em;margin-bottom:1.8rem;display:block}
+  .meta{font-size:.88rem;color:var(--muted);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:.6rem 0;margin:0 0 1.8rem}
+  ol{margin:0 0 1rem;padding-left:1.2rem}
+  li{margin:.4rem 0}
+  blockquote{border-left:3px solid var(--accent);margin:1.4rem 0;padding:.2rem 0 .2rem 1rem;color:var(--fg)}
+  .card{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:1.1rem;margin:1.6rem 0}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+</style>
+</head>
+<body>
+<main>
+  <a href="index.html" class="brand">← Benchless</a>
+
+  <h1>The Honest Walkthrough: How I Won the IEEE TCAD Hackathon from Dhaka with No Lab</h1>
+
+  <p class="meta">Written by Hozaifa Hossain · EEE, University of Dhaka · Published August 2026</p>
+
+  <p>I do not have access to an expensive physical lab or a funded research group. I am an undergraduate student in Dhaka working on a standard laptop.</p>
+
+  <p>People often tell new researchers to wait until they join an established lab. But in almost any field today, discovery happens in software long before anything gets built physically. Using laptop software tools and command-line scripts, I placed as one of three winners of the IEEE TCAD Hackathon 2026, and I contributed the machine-learning work to a co-authored paper accepted at IEEE EDTM 2026. Here is the exact approach I used.</p>
+
+  <h2>1. Run your software tools from the terminal</h2>
+
+  <p>Clicking through graphical software windows to adjust settings by hand is slow. I switched to running simulation tools straight from the command line using shell scripts.</p>
+
+  <p>Instead of manually guessing parameters, I wrote a Python script that implements a coordinate descent optimization loop. The script changes one variable at a time, evaluates the output score against a target metric, locks in the improvement, and steps to the next variable. My AI coding agent kept this loop running overnight while I slept.</p>
+
+  <p>This optimization setup is not specific to my field. You can use coordinate descent in any domain where you have a measurable score to improve, including machine learning models, algorithm design, physical simulations, data science, or engineering problems. If your project has a target metric, automated search can optimize it for you.</p>
+
+  <h2>2. Let AI write the glue scripts</h2>
+
+  <p>I used AI coding agents to write data parsers, extract key metrics from raw output logs, and format LaTeX tables. Automating the boilerplate code meant I could run dozens of experiment sweeps in an afternoon instead of spending hours reformatting text by hand.</p>
+
+  <h2>3. Filter out fake conferences</h2>
+
+  <p>Without a lab advisor guiding every step, it is easy to get targeted by pay-to-publish journals. I stuck to official society venues and verified every conference on IEEE Xplore, Scopus, or DOAJ before writing a single word of the manuscript.</p>
+
+  <h2>4. What you can do today</h2>
+
+  <ol>
+    <li><strong>Pick a software-verifiable problem:</strong> Choose a research topic where ideas can be modeled and scored in code.</li>
+    <li><strong>Automate your toolchain:</strong> Run your software tools using terminal scripts instead of clicking GUI menus.</li>
+    <li><strong>Set up an automated search loop:</strong> Use coordinate descent scripts to run parameter searches overnight.</li>
+    <li><strong>Check database indexing:</strong> Submit only to venues listed on IEEE Xplore, Scopus, or DOAJ.</li>
+  </ol>
+
+  <blockquote>
+    <p><strong>Summary:</strong> You do not need physical lab hardware to do real research. Most of the initial discovery work is parameter search, and you can automate that on a laptop in any field.</p>
+  </blockquote>
+
+  <div class="card">
+    <p style="margin:0 0 .4rem"><strong>Want to scope a research project you can finish?</strong></p>
+    <p style="margin:0">Benchless helps you scope software-based projects, verify venue indexing, and set up your submission kit. <a href="index.html">Learn more on the home page.</a></p>
+  </div>
+
+  <footer>
+    <p>Built by Hozaifa Hossain in Dhaka, Bangladesh. <a href="index.html">Home</a> · <a href="https://github.com/hozaifa1/benchless">Source Code</a></p>
+  </footer>
+</main>
+</body>
+</html>
