@@ -8,9 +8,14 @@
 // endpoint. Nothing here needs a Node built-in.
 export const config = { runtime: 'edge' };
 
-import { polar, PRODUCT_ID, json, corsHeaders, safeParse, PolarError } from './_polar.mjs';
+import { polar, PRODUCTS, json, corsHeaders, safeParse, PolarError } from './_polar.mjs';
 
-const SUCCESS_URL = 'https://benchless-app.web.app/kit.html?checkout_id={CHECKOUT_ID}';
+// Where each product lands after payment. The kit unlocks a page; the session cannot,
+// because what was bought is an hour of my time and the next step is an email from me.
+const SUCCESS_URL = {
+  kit: 'https://benchless-app.web.app/kit.html?checkout_id={CHECKOUT_ID}',
+  session: 'https://benchless-app.web.app/booked.html?checkout_id={CHECKOUT_ID}'
+};
 
 export default async function handler(request) {
   const origin = request.headers.get('origin');
@@ -36,12 +41,17 @@ export default async function handler(request) {
   if (source) metadata.source = source;
   if (referrer) metadata.referrer = referrer;
 
+  // Allowlisted key, never an id. An unrecognised value buys the kit rather than erroring,
+  // which is the safe direction: the cheaper product, at a price fixed on the server.
+  const productKey = Object.hasOwn(PRODUCTS, body.product) ? body.product : 'kit';
+  metadata.product = productKey;
+
   try {
     const checkout = await polar('/checkouts/', {
       method: 'POST',
       body: JSON.stringify({
-        products: [PRODUCT_ID],
-        success_url: SUCCESS_URL,
+        products: [PRODUCTS[productKey]],
+        success_url: SUCCESS_URL[productKey],
         ...(email ? { customer_email: email } : {}),
         metadata
       })

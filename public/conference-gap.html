@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>I tried to build a fake-conference detector. It couldn't tell IEDM from a conference I invented.</title>
+<meta name="description" content="A measurement: 80% of flagship IEEE conference series and 90% of invented spam-shaped names both return UNKNOWN against every public index. Journals have DOAJ and ISSNs. Conferences have no registry at all.">
+<style>
+  :root{color-scheme:light dark;--fg:#14171c;--muted:#5c6674;--bg:#fff;--line:#e4e7ec;--accent:#1a4fd6;--soft:#f6f7f9;--warn:#8a5a00}
+  @media (prefers-color-scheme:dark){:root{--fg:#e9ecf1;--muted:#98a2b1;--bg:#0e1014;--line:#242932;--accent:#88a6ff;--soft:#161a20;--warn:#e0b050}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:44rem;margin:0 auto;padding:3.5rem 1.25rem 5rem}
+  h1{font-size:2.1rem;line-height:1.2;margin:0 0 1rem;letter-spacing:-.03em}
+  h2{font-size:1.2rem;margin:2.4rem 0 .6rem;letter-spacing:-.01em}
+  p{margin:0 0 1rem}
+  .brand{font-weight:600;letter-spacing:-.02em;margin-bottom:1.8rem;display:block;text-decoration:none;color:var(--fg)}
+  .meta{font-size:.88rem;color:var(--muted);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:.6rem 0;margin:0 0 1.8rem}
+  ul,ol{margin:0 0 1rem;padding-left:1.2rem}
+  li{margin:.45rem 0}
+  blockquote{border-left:3px solid var(--accent);margin:1.4rem 0;padding:.2rem 0 .2rem 1rem}
+  .card{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:1.1rem 1.25rem;margin:1.6rem 0}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em}
+  pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:.9rem 1rem;overflow-x:auto}
+  table{border-collapse:collapse;width:100%;margin:1.2rem 0;font-size:.95rem}
+  th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--line)}
+  th{font-weight:600;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.04em}
+  .num{font-variant-numeric:tabular-nums}
+  .tag{font-size:.78rem;font-weight:600;letter-spacing:.03em;padding:.12rem .4rem;border-radius:4px;background:var(--soft);border:1px solid var(--line);color:var(--muted)}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+  .scroll{overflow-x:auto}
+</style>
+</head>
+<body>
+<main>
+  <a href="index.html" class="brand">&larr; Benchless</a>
+
+  <h1>I tried to build a fake-conference detector. It couldn't tell IEDM from a conference I made up.</h1>
+
+  <p class="meta">Hozaifa Hossain &middot; EEE, University of Dhaka &middot; 15 August 2026 &middot; <a href="https://github.com/hozaifa1/benchless">reproduces in one command</a></p>
+
+  <p>A conference invitation arrives with a society-styled name, a plausible committee, and a submission deadline three weeks out. You are an undergraduate with no supervisor to ask. You have about ten minutes of judgement to spend and no way to buy more. What do you check?</p>
+
+  <p>I built the thing I wanted to exist. It works for journals and it does not work for conferences, and the reason it fails turned out to be more interesting than the tool.</p>
+
+  <h2>What I built</h2>
+
+  <p>A venue checker: you give it a name, it matches against roughly 88,000 records pulled from DOAJ, the Scopus source list, IEEE's listings and the published predatory lists, and it returns a verdict with the record it matched and a source URL you can open yourself. No language model touches the verdict. It is deterministic code, because a model that confidently tells a student a fake venue is real does more damage than no tool at all.</p>
+
+  <p>On journals it does what I hoped. Ten out of ten I tried came back correct, with the indexing record attached.</p>
+
+  <h2>Then I pointed it at conferences</h2>
+
+  <p>Thirty names. Twenty flagship series that nobody would dispute &mdash; IEDM, ISSCC, DAC, ICCAD, VLSI, IRPS, CLEO, NeurIPS, ICML, CVPR, ISCAS and others across the fields this is meant to serve. Ten names I wrote myself in the house style of the invitations that actually reach unsupervised students: maximally broad scope, two whole disciplines joined with "and".</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Input</th><th>Returned no usable verdict</th><th>Rate</th></tr></thead>
+    <tbody>
+      <tr><td>20 flagship conference series</td><td class="num">16 of 20</td><td class="num">80%</td></tr>
+      <tr><td>10 invented spam-shaped names</td><td class="num">9 of 10</td><td class="num">90%</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Eighty per cent versus ninety per cent. The verdict does not separate the two cases. Against a conference name, the tool carries close to zero information, and a student following it would be no better off than guessing.</p>
+
+  <blockquote>
+    <p>IEDM &mdash; the most important conference in my field, running since 1955 &mdash; appears in the public data only as <code>Technical digest</code>, a library-catalogue string for the printed proceedings. Not as a conference. Not under a name any human types.</p>
+  </blockquote>
+
+  <h2>The weak joint, before you find it</h2>
+
+  <p>I wrote the ten fake names myself. That is the softest part of this and I would rather say so than have it pointed out. A real study would sample actual call-for-papers spam over a fixed window instead of inventing the negatives.</p>
+
+  <p>The result does not hang on it. Even if every invented name were thrown out, four of twenty legitimate flagship series being identifiable is the finding on its own. The false negatives are measured against ground truth nobody disputes.</p>
+
+  <h2>Why it fails, which is the actual point</h2>
+
+  <p>This is not a bug in my matcher, and tuning the string matching will not fix it. Journals are identified infrastructure: they have ISSNs, and DOAJ exists specifically to say which ones are real. Conferences have neither.</p>
+
+  <ul>
+    <li>Around 85% of the IEEE entries I pulled are <strong>dated individual events</strong> &mdash; "2019 IEEE International&hellip;" &mdash; rather than the <strong>series</strong> a student is actually asking about.</li>
+    <li>The catalogue strings are written for librarians. "Technical Digest &mdash; International Electron Devices Meeting" is a correct record and a useless lookup key.</li>
+    <li>There is no ISSN-equivalent for a conference series. Nothing to join on.</li>
+  </ul>
+
+  <p>So there is no machine-readable registry of legitimate conference series anywhere that I could find. Not behind a paywall, not in an academic dataset, not as a side effect of some other product. And conferences, not journals, are where predatory publishing actually reaches an unsupervised undergraduate, because the invitation arrives in their inbox with a deadline attached.</p>
+
+  <h2>What my tool does about it now</h2>
+
+  <p>It refuses. If a conference name does not match a record it can show you, it returns <code>UNKNOWN</code> and says so, rather than producing a confident verdict it cannot support. On the benchmark above that means declining <strong>25 of 30</strong> inputs.</p>
+
+  <p>A declining tool is worse than a working one and better than a lying one. I would rather publish the decline rate than have a student trust a guess. The <a href="governance.html">governance page</a> has the full accounting of what refuses, when, and why.</p>
+
+  <h2>Check it yourself</h2>
+
+  <p>The benchmark is in the repository and reproduces in one command. It carries a self-check that <em>fails</em> if the gap ever closes &mdash; if some future index makes conferences separable, this page is wrong and I want the test to tell me.</p>
+
+  <pre>git clone https://github.com/hozaifa1/benchless
+node scripts/conference_gap.mjs</pre>
+
+  <h2>I want to build the registry</h2>
+
+  <p>Nobody owns this. A public, machine-readable list of legitimate conference series, with provenance for every entry, is a boring piece of infrastructure that does not exist and should. I intend to build it and give it away rather than sell it, because a registry that only paying students can query fails the people it is for.</p>
+
+  <p>If you maintain conference metadata, run a society's proceedings, or have tried this and hit the same wall &mdash; I would like to hear how you handled it. I am at <a href="mailto:20hozaifa02@gmail.com">20hozaifa02@gmail.com</a> and I answer everything.</p>
+
+  <div class="card">
+    <p style="margin:0 0 .4rem"><strong>The checker is free and there is no signup.</strong></p>
+    <p style="margin:0 0 .5rem">Paste a venue name and it shows you the record it matched, or tells you it cannot tell. <a href="app.html">Try it here</a>.</p>
+    <p class="small" style="margin:0;font-size:.9rem;color:var(--muted)">Built in Dhaka by an undergraduate with no lab access. <a href="index.html">What this is</a>.</p>
+  </div>
+
+  <footer>
+    <p>Hozaifa Hossain &middot; one of three winners, IEEE TCAD Hackathon 2026 &middot; co-author, IEEE EDTM 2026 &middot; University of Dhaka, EEE</p>
+    <p><a href="index.html">Home</a> &middot; <a href="governance.html">Governance and refusal rates</a> &middot; <a href="https://github.com/hozaifa1/benchless">Source</a> (MIT)</p>
+  </footer>
+</main>
+</body>
+</html>

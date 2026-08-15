@@ -59,6 +59,7 @@
   <h2>Read the walkthrough</h2>
   <p><a href="walkthrough.html" style="font-weight:600;font-size:1.05rem;">Read the Honest Walkthrough: How I won the IEEE TCAD Hackathon from Dhaka with no lab →</a></p>
   <p style="margin-top:.8rem"><a href="app.html" style="font-weight:600;font-size:1.05rem;">Or scope a study and check a venue now →</a></p>
+  <p style="margin-top:.8rem"><a href="conference-gap.html" style="font-weight:600;font-size:1.05rem;">I measured how badly venue checking fails on conferences →</a></p>
   <p class="small" style="margin-top:1.2rem">Or leave your email below to get updates and new walkthrough guides as they drop:</p>
   <form id="f">
     <input type="email" id="email" placeholder="you@university.edu" required autocomplete="email">
@@ -75,9 +76,19 @@
     </div>
   </div>
 
+  <div class="card">
+    <p style="margin:0 0 .5rem"><strong>Scoping session, $49</strong></p>
+    <p class="small" style="margin:0 0 .9rem">An hour with me instead of a document. Tell me your field, your background, and what software you can actually get hold of, and I'll come back with studies you could genuinely finish on the hardware you own — plus the venues worth aiming at, with the indexing record shown. <strong>If there's no finishable study in your situation, I'll tell you that and refund you.</strong> I've told people that before.</p>
+    <div class="buyrow">
+      <button type="button" id="buysession">Book a session — $49</button>
+      <span class="small" id="sessionmsg"></span>
+    </div>
+  </div>
+
   <footer>
     <p>Built in Dhaka, Bangladesh. <a href="https://github.com/hozaifa1/benchless">Source on GitHub</a></p>
     <p>Benchless teaches research methods. It doesn't write, submit, or co-author your work, and it has no affiliation with any publisher or conference.</p>
+    <p><a href="governance.html">What decides what, and how often it refuses</a> · <a href="conference-gap.html">The conference gap</a></p>
   </footer>
 </main>
 <script>
@@ -102,22 +113,28 @@ f.addEventListener('submit',async e=>{
 
 // Checkout is created server-side so the Polar key stays off this page and the product and
 // price are fixed there, not chosen here.
-const buy=document.getElementById('buy'),buymsg=document.getElementById('buymsg');
-buy.addEventListener('click',async()=>{
-  buy.disabled=true; buymsg.textContent='Opening checkout…';
-  try{
-    const r=await fetch('https://benchless.vercel.app/api/checkout',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({source:'landing',referrer:document.referrer||''})
-    });
-    const d=await r.json();
-    if(!r.ok||!d.url) throw new Error(d.error||'Checkout could not be opened.');
-    location.href=d.url;
-  }catch(err){
-    buymsg.textContent=err.message+' Email 20hozaifa02@gmail.com and I\'ll send you a link.';
-    buy.disabled=false;
-  }
-});
+// `product` is a key, not an id or a price — the server holds the map, so nothing the
+// browser sends can select a different product or a different amount.
+function wireCheckout(btnId,msgId,product){
+  const btn=document.getElementById(btnId),out=document.getElementById(msgId);
+  btn.addEventListener('click',async()=>{
+    btn.disabled=true; out.textContent='Opening checkout…';
+    try{
+      const r=await fetch('https://benchless.vercel.app/api/checkout',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({product,source:'landing',referrer:document.referrer||''})
+      });
+      const d=await r.json();
+      if(!r.ok||!d.url) throw new Error(d.error||'Checkout could not be opened.');
+      location.href=d.url;
+    }catch(err){
+      out.textContent=err.message+' Email 20hozaifa02@gmail.com and I\'ll send you a link.';
+      btn.disabled=false;
+    }
+  });
+}
+wireCheckout('buy','buymsg','kit');
+wireCheckout('buysession','sessionmsg','session');
 </script>
 </body>
 </html>

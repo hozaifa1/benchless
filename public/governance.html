@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Benchless — what decides what, and how often it refuses</title>
+<meta name="description" content="Which functions a language model decides, which deterministic code decides, the published refusal rate, and the revenue disclosure including related-party sales.">
+<style>
+  :root{color-scheme:light dark;--fg:#14171c;--muted:#5c6674;--bg:#fff;--line:#e4e7ec;--accent:#1a4fd6;--soft:#f6f7f9;--code:#0a7d55;--ai:#8a4fd6}
+  @media (prefers-color-scheme:dark){:root{--fg:#e9ecf1;--muted:#98a2b1;--bg:#0e1014;--line:#242932;--accent:#88a6ff;--soft:#161a20;--code:#4fd6a0;--ai:#b98cff}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:48rem;margin:0 auto;padding:3.5rem 1.25rem 5rem}
+  h1{font-size:2rem;line-height:1.2;margin:0 0 1rem;letter-spacing:-.03em}
+  h2{font-size:1.2rem;margin:2.6rem 0 .6rem;letter-spacing:-.01em}
+  h3{font-size:1rem;margin:1.6rem 0 .4rem}
+  p{margin:0 0 1rem}
+  .brand{font-weight:600;letter-spacing:-.02em;margin-bottom:1.8rem;display:block;text-decoration:none;color:var(--fg)}
+  .meta{font-size:.88rem;color:var(--muted);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:.6rem 0;margin:0 0 1.8rem}
+  ul,ol{margin:0 0 1rem;padding-left:1.2rem}
+  li{margin:.45rem 0}
+  .card{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:1.1rem 1.25rem;margin:1.6rem 0}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em}
+  pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:.9rem 1rem;overflow-x:auto}
+  .scroll{overflow-x:auto;margin:1.2rem 0}
+  table{border-collapse:collapse;width:100%;font-size:.93rem;min-width:34rem}
+  th,td{text-align:left;padding:.55rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;color:var(--muted);font-size:.82rem;text-transform:uppercase;letter-spacing:.04em}
+  .num{font-variant-numeric:tabular-nums}
+  .who{font-size:.78rem;font-weight:700;letter-spacing:.03em;white-space:nowrap}
+  .who.code{color:var(--code)}
+  .who.ai{color:var(--ai)}
+  .who.human{color:var(--muted)}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+</style>
+</head>
+<body>
+<main>
+  <a href="index.html" class="brand">&larr; Benchless</a>
+
+  <h1>What decides what, and how often it refuses</h1>
+
+  <p class="meta">Last updated 15 August 2026 &middot; every claim here is checkable in <a href="https://github.com/hozaifa1/benchless">the repository</a></p>
+
+  <p>Benchless uses a language model. It also tells students whether a publication venue is real, which is a claim that can end a career if it is wrong. Those two facts need to be reconciled in public rather than glossed over, so this page says exactly which component decides which thing.</p>
+
+  <div class="card">
+    <p style="margin:0"><strong>The rule:</strong> code decides where correctness matters; the model decides where judgement is required. A model is never permitted to rule on whether a venue is legitimate. Where the deterministic answer cannot be computed, the system refuses and says so, and the refusal rate is published below.</p>
+  </div>
+
+  <h2>The map</h2>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Function</th><th>Decided by</th><th>On failure</th><th>Record</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Is this venue legitimate?</strong></td>
+        <td><span class="who code">CODE</span></td>
+        <td>Returns <code>UNKNOWN</code>. Never guesses.</td>
+        <td><code>public/js/venue-core.mjs</code></td>
+      </tr>
+      <tr>
+        <td><strong>Which record did it match?</strong></td>
+        <td><span class="who code">CODE</span></td>
+        <td>Shows the record and source URL, or nothing.</td>
+        <td><code>data/index/</code> &mdash; ~88k records from DOAJ, Scopus source list, IEEE, published predatory lists</td>
+      </tr>
+      <tr>
+        <td><strong>Submission dates and timeline arithmetic</strong></td>
+        <td><span class="who code">CODE</span></td>
+        <td>Deterministic. No model call.</td>
+        <td><code>public/js/</code></td>
+      </tr>
+      <tr>
+        <td><strong>What study could this student finish?</strong></td>
+        <td><span class="who ai">MODEL</span></td>
+        <td>Constrained to a forced response schema; must state why each proposal fits the stated hardware, and the most likely reason it fails.</td>
+        <td><code>api/scope.js</code> &middot; <code>gemini-3.6-flash</code></td>
+      </tr>
+      <tr>
+        <td><strong>How long will it take?</strong></td>
+        <td><span class="who ai">MODEL</span></td>
+        <td>An estimate, labelled as one. A study that cannot finish in the stated window is treated as a failed proposal, not an ambitious one.</td>
+        <td><code>api/scope.js</code></td>
+      </tr>
+      <tr>
+        <td><strong>Whether to publish outreach</strong></td>
+        <td><span class="who ai">MODEL</span> <span class="who human">+ HUMAN</span></td>
+        <td>Agent drafts and may decline; a person sends. See the refusal log below.</td>
+        <td><code>OUTREACH.md</code></td>
+      </tr>
+      <tr>
+        <td><strong>Whether a payment happened</strong></td>
+        <td><span class="who code">CODE</span></td>
+        <td>Asks Polar about the order on every page load. Never trusts the browser.</td>
+        <td><code>api/kit.mjs</code>, <code>api/polar-webhook.mjs</code></td>
+      </tr>
+      <tr>
+        <td><strong>Whether to write a student's paper</strong></td>
+        <td><span class="who human">NEVER</span></td>
+        <td>Refused by policy, not by configuration. This is the line the business does not cross.</td>
+        <td><code>PLAN.md</code>, standing rule 6</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>The model is consulted in exactly one file. It proposes and explains. It does not rule on facts, and it does not touch money.</p>
+
+  <h2>The refusal rate</h2>
+
+  <p>A tool that declines is worse than one that works and better than one that lies. Declining is only honest if the rate is public, so here it is.</p>
+
+  <h3>Venue verdicts</h3>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Input class</th><th>Refused (<code>UNKNOWN</code>)</th><th>Rate</th></tr></thead>
+    <tbody>
+      <tr><td>Journals, hand-checked sample</td><td class="num">0 of 10</td><td class="num">0%</td></tr>
+      <tr><td>Flagship conference series</td><td class="num">16 of 20</td><td class="num">80%</td></tr>
+      <tr><td>Invented spam-shaped conference names</td><td class="num">9 of 10</td><td class="num">90%</td></tr>
+      <tr><td><strong>Conferences, all inputs</strong></td><td class="num"><strong>25 of 30</strong></td><td class="num"><strong>83%</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>The system is close to useless on conference names, and it says so instead of guessing. That is not a tuning problem &mdash; there is no machine-readable registry of legitimate conference series for it to check against. I wrote up the measurement and the reproduction command in <a href="conference-gap.html">the conference gap</a>.</p>
+
+  <pre>node scripts/conference_gap.mjs   # reproduces the table above</pre>
+
+  <p>The benchmark carries a self-check that fails if the numbers stop being true, so this page cannot quietly go stale without the test breaking.</p>
+
+  <h3>The outreach agent's refusals</h3>
+
+  <p>A scheduled agent drafts outreach. Under its first rule set it ran three times and declined to publish anything on all three, because the topics it was permitted to engage with were drawn too narrowly to match any live discussion it found. I widened the permitted range and it produced one comment, which I reviewed and sent from my own account.</p>
+
+  <p>I am recording that rather than deleting it. Three refusals out of three runs is the system behaving correctly under a bad configuration I wrote, and the fix was a rule change made deliberately, not a retry until it complied.</p>
+
+  <h2>Decision logging</h2>
+
+  <p>Every agent decision writes one row. The schema was fixed before launch, because logs only accrue forward and a schema added later cannot recover what already happened.</p>
+
+  <pre>timestamp, decision_type, model, input_hash, output, human_intervened</pre>
+
+  <p><strong>As of 15 August 2026 the <code>decision_logs</code> collection holds 5 rows, all of them self-tests written on 13 August.</strong> There has been no real user traffic to log. Publishing a governance page whose logs are empty is slightly absurd, and stating the count is the only version of it that is honest.</p>
+
+  <h2>Revenue and related-party disclosure</h2>
+
+  <p>Stated now, while the numbers are zero and there is no incentive to shade them.</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>As of 15 August 2026</th><th>Amount</th></tr></thead>
+    <tbody>
+      <tr><td>Total revenue</td><td class="num">$0.00</td></tr>
+      <tr><td>&mdash; from arms-length third parties</td><td class="num">$0.00</td></tr>
+      <tr><td>&mdash; related-party (family, friends, agency clients)</td><td class="num">$0.00</td></tr>
+      <tr><td>Marketing and customer-acquisition spend</td><td class="num">$0.00</td></tr>
+      <tr><td>Infrastructure cost</td><td class="num">~$0 &mdash; free tiers, public data, a few dollars of inference</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p><strong>Standing rule: I do not sell to family, friends, or clients of my agency.</strong> If that ever changes, the sale is disclosed here as related-party and excluded from any headline number I quote anywhere.</p>
+
+  <h3>Channel of origin</h3>
+
+  <p>Recorded at the moment of sale rather than reconstructed afterwards, because it is unrecoverable later. Every checkout carries <code>source</code>, <code>referrer</code> and <code>product</code> into the order metadata, and every paid order logs one structured line.</p>
+
+  <pre>SALE {"orderId":…,"productId":…,"amount":…,"currency":…,
+      "customerEmail":…,"country":…,"source":…,"referrer":…}</pre>
+
+  <p>See <code>api/checkout.mjs</code> and <code>api/polar-webhook.mjs</code>. Polar is the system of record for money; nothing here is trusted without a valid webhook signature.</p>
+
+  <h2>How you would catch me being wrong</h2>
+
+  <ul>
+    <li>Run <code>node scripts/conference_gap.mjs</code>. If the refusal rates differ from this page, this page is wrong.</li>
+    <li>Read <code>api/scope.js</code>. It is the only file that calls a model. If a model call appears in the venue path, the rule above is broken.</li>
+    <li>Paste a venue you know is predatory into <a href="app.html">the checker</a>. If it returns anything other than a matched record or <code>UNKNOWN</code>, tell me.</li>
+    <li>The whole thing is MIT licensed. <a href="https://github.com/hozaifa1/benchless">Read it</a>.</li>
+  </ul>
+
+  <p>If I find that the honest version of this is not a business &mdash; that what people will pay for is to <em>be</em> published rather than to learn how &mdash; I will publish that finding here and say what I am doing instead. I have set the threshold in advance: eight people paying $200 or more by 12 November 2026.</p>
+
+  <footer>
+    <p>Hozaifa Hossain &middot; one of three winners, IEEE TCAD Hackathon 2026 &middot; co-author, IEEE EDTM 2026 &middot; University of Dhaka, EEE</p>
+    <p><a href="index.html">Home</a> &middot; <a href="conference-gap.html">The conference gap</a> &middot; <a href="https://github.com/hozaifa1/benchless">Source</a> (MIT)</p>
+  </footer>
+</main>
+</body>
+</html>
