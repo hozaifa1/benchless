@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Scope a study and check the venue — Benchless</title>
-<meta name="description" content="Describe your field, background and available software. Get simulation studies sized to the time you have, and a deterministic check on whether the venue you're aiming at is indexed anywhere real.">
+<title>Is this journal or conference real? — Benchless</title>
+<meta name="description" content="Paste a journal or conference name and see whether it is indexed anywhere real, with the matched record and its source shown. Deterministic lookup, no model, no signup. Returns UNKNOWN rather than guessing.">
 <style>
   :root{color-scheme:light dark;--fg:#14171c;--muted:#5c6674;--bg:#fff;--line:#e4e7ec;--accent:#1a4fd6;--soft:#f6f7f9;--ok:#0a7d4a;--warn:#b3520a;--bad:#b3251f}
   @media (prefers-color-scheme:dark){:root{--fg:#e9ecf1;--muted:#98a2b1;--bg:#0e1014;--line:#242932;--accent:#88a6ff;--soft:#161a20;--ok:#4ac98a;--warn:#e8a25c;--bad:#f0776f}}
@@ -43,8 +43,24 @@
 <main>
   <a href="index.html" class="brand">← Benchless</a>
 
-  <h1>Scope a study. Check the venue.</h1>
-  <p class="small">Study ideas come from a model. Venue verdicts never do: those are a lookup, shown with the record. It says UNKNOWN a lot, which is honest rather than broken. <a href="conference-gap.html">I measured how often</a>.</p>
+  <h1>Is this venue real?</h1>
+  <p class="small">Paste a journal or conference name. You get the record it matched and a link to check yourself, or UNKNOWN. It says UNKNOWN a lot on conferences: <a href="conference-gap.html">I measured how often</a>.</p>
+
+  <form id="venueform">
+    <div class="field">
+      <label for="venueq">Journal or conference name</label>
+      <input id="venueq" required placeholder="e.g. IEEE Electron Device Letters" autocomplete="off">
+    </div>
+    <button id="vgo" type="submit">Check it</button>
+  </form>
+
+  <div id="vstatus" class="spin" aria-live="polite"></div>
+  <div id="vout"></div>
+
+  <hr style="margin:3.5rem 0 2rem;border:0;border-top:1px solid var(--line)">
+
+  <h2 style="margin-top:0">Or scope a study you could finish</h2>
+  <p class="small">A different job, done a different way. This one asks a model for study ideas sized to the software and weeks you actually have. It takes a few seconds and it is optional.</p>
 
   <form id="intake">
     <div class="field">
@@ -59,15 +75,9 @@
       <label for="software">Software you can actually get hold of</label>
       <textarea id="software" placeholder="e.g. Sentaurus TCAD on my university's licence, Python, COMSOL student edition"></textarea>
     </div>
-    <div class="row">
-      <div>
-        <label for="weeks">Weeks you realistically have</label>
-        <input id="weeks" type="number" min="1" max="52" value="12" required>
-      </div>
-      <div>
-        <label for="venue">Venue you're considering (optional)</label>
-        <input id="venue" placeholder="conference or journal name, or ISSN">
-      </div>
+    <div class="field">
+      <label for="weeks">Weeks you realistically have</label>
+      <input id="weeks" type="number" min="1" max="52" value="12" required>
     </div>
     <button id="go" type="submit">Scope it</button>
   </form>
@@ -199,6 +209,27 @@ function renderTimeline(weeks, rows) {
 // Nothing is sold on this page. It is the free tool the posts point at, and putting a
 // checkout on it would make the promise in those posts false.
 
+// The venue check stands on its own, because that is the question people actually arrive
+// with. It is deterministic and instant, and it must not be gated behind a scoping form.
+$('venueform').addEventListener('submit', async e => {
+  e.preventDefault();
+  const q = $('venueq').value.trim();
+  if (!q) return;
+  const btn = $('vgo'), out = $('vout'), status = $('vstatus');
+
+  btn.disabled = true; out.innerHTML = ''; status.textContent = 'Checking…';
+  try {
+    const v = await checkVenue(q);
+    out.innerHTML = renderVenue(v);
+    logDecision({ decisionType: 'venue_check', model: 'none (deterministic lookup)', input: { venueQuery: q }, output: v });
+  } catch (err) {
+    out.innerHTML = `<p class="err">Venue index did not load: ${esc(err.message)}</p>`;
+  } finally {
+    status.textContent = '';
+    btn.disabled = false;
+  }
+});
+
 $('intake').addEventListener('submit', async e => {
   e.preventDefault();
   const go = $('go'), out = $('out'), status = $('status');
@@ -208,23 +239,9 @@ $('intake').addEventListener('submit', async e => {
     software: $('software').value.trim(),
     weeks: Math.min(52, Math.max(1, Number($('weeks').value) || 12))
   };
-  const venueQuery = $('venue').value.trim();
 
-  go.disabled = true; out.innerHTML = ''; status.textContent = 'Checking the venue…';
+  go.disabled = true; out.innerHTML = '';
   let html = '';
-
-  // Venue first: it is instant, deterministic, and it is the part that can stop you
-  // spending a year on the wrong target.
-  if (venueQuery) {
-    try {
-      const v = await checkVenue(venueQuery);
-      html += renderVenue(v);
-      logDecision({ decisionType: 'venue_check', model: 'none (deterministic lookup)', input: { venueQuery }, output: v });
-    } catch (err) {
-      html += `<p class="err">Venue index did not load: ${esc(err.message)}</p>`;
-    }
-    out.innerHTML = html;
-  }
 
   status.textContent = 'Scoping studies… this takes a few seconds.';
   try {
