@@ -44,7 +44,7 @@
   <a href="index.html" class="brand">← Benchless</a>
 
   <h1>Scope a study. Check the venue.</h1>
-  <p class="small">Two different jobs, done two different ways. Study proposals come from a model, because "is this worth doing and can you finish it" is judgement. The venue verdict is a database lookup with the record shown, because a model must never be the thing that tells you a conference is real.</p>
+  <p class="small">This page does two things, and it decides them differently. Study proposals come from a model, because whether a question is worth asking and can be finished in the weeks you have is judgement. The venue verdict is a database lookup with the matched record shown, because a model must never be the thing that tells you a conference is real. It will answer UNKNOWN when it cannot find a record, which happens often on conferences. That is the honest answer rather than a guess, and <a href="conference-gap.html">here is the measurement of how often</a>.</p>
 
   <form id="intake">
     <div class="field">
@@ -76,12 +76,8 @@
   <div id="out"></div>
 
   <div class="card" style="margin-top:2.5rem">
-    <p style="margin:0 0 .4rem"><strong>First Paper Kit, $29</strong></p>
-    <p class="small" style="margin:0 0 .9rem">This page scopes and checks. The kit is the part that gets you to a submission: the scoping worksheet with the feasibility and validation gates, a commented LaTeX submission kit, and 40 venues checked against the same indexing records used above, grouped by subfield with the evidence shown.</p>
-    <div style="display:flex;gap:.7rem;align-items:center;flex-wrap:wrap">
-      <button type="button" id="buy">Get the kit — $29</button>
-      <span class="small" id="buymsg"></span>
-    </div>
+    <p style="margin:0 0 .4rem"><strong>Did it get something wrong?</strong></p>
+    <p class="small" style="margin:0">That is the useful case and I would rather hear about it than not. If it refused a venue you know is legitimate, or returned a record for one you know is not, email me at <a href="mailto:20hozaifa02@gmail.com">20hozaifa02@gmail.com</a> with the name you typed. The wrong answers are what the index gets fixed from. You can also read <a href="governance.html">what decides what here, and how often it refuses</a>.</p>
   </div>
 
   <footer>
@@ -201,24 +197,8 @@ function renderTimeline(weeks, rows) {
     <div class="honest"><p style="margin:0">You write it. You submit it. Benchless checked the venue record and did the arithmetic, and that is the whole of what it did.</p></div>`;
 }
 
-// Checkout is created server-side: the Polar key stays off this page, and the product and
-// price are fixed there rather than chosen here.
-$('buy').addEventListener('click', async () => {
-  const b = $('buy'), m = $('buymsg');
-  b.disabled = true; m.textContent = 'Opening checkout…';
-  try {
-    const r = await fetch('https://benchless.vercel.app/api/checkout', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ source: 'app', referrer: document.referrer || '' })
-    });
-    const d = await r.json();
-    if (!r.ok || !d.url) throw new Error(d.error || 'Checkout could not be opened.');
-    location.href = d.url;
-  } catch (err) {
-    m.innerHTML = `<span class="err">${esc(err.message)}</span> Email 20hozaifa02@gmail.com and I'll send a link.`;
-    b.disabled = false;
-  }
-});
+// Nothing is sold on this page. It is the free tool the posts point at, and putting a
+// checkout on it would make the promise in those posts false.
 
 $('intake').addEventListener('submit', async e => {
   e.preventDefault();
