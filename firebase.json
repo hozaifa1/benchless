@@ -12,6 +12,15 @@
         "headers": [{ "key": "Content-Type", "value": "text/javascript; charset=utf-8" }]
       },
       {
+        "comment": "Firebase defaults HTML to max-age=3600, so a visitor who opened a page keeps the old copy for an hour and never sees a fix. Revalidate every time; the ETag makes that a 304 in the normal case.",
+        "source": "**/*.html",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache, max-age=0, must-revalidate" }]
+      },
+      {
+        "source": "/",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache, max-age=0, must-revalidate" }]
+      },
+      {
         "source": "/data/index/**",
         "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
       }
