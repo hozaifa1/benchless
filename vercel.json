@@ -1,6 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "public",
+  "cleanUrls": true,
   "functions": {
-    "api/scope.js": { "maxDuration": 30 }
+    "api/scope.js": { "maxDuration": 30 },
+    "api/checkout.mjs": { "maxDuration": 30 },
+    "api/kit.mjs": { "maxDuration": 30 },
+    "api/polar-webhook.mjs": { "maxDuration": 30 }
   }
 }
