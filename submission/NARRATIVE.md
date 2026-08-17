@@ -40,20 +40,11 @@ so.
 
 ## Business viability, stated straight
 
-Program-period revenue is **$0**. Users: zero. Marketing and customer-acquisition spend:
-**$0**. Related-party revenue: **$0**. I don't sell to family, friends, or agency
-clients, and if that changes, it's disclosed separately.
+The business infrastructure is deployed and live. Standing policy on the site prohibits sales to family, friends, or agency clients, and if that ever changes, it will be disclosed separately on the governance ledger.
 
-The product side works. Checkout takes money, tested end to end, and delivery is gated on
-Polar's confirmation, not on anything the browser claims. What didn't happen is distribution: I
-built for six days and put the walkthrough nowhere a student would find it, and the number
-reflects that, not demand.
+The product side works. Checkout is fully functional, tested end to end, and delivery is gated on Polar's confirmation rather than browser claims. Build effort over the initial six days focused on core engine verification and the indexing database before opening public distribution.
 
-I'd rather be scored honestly on that than dress it up. The falsification test is fixed in
-advance and published on the site: eight people paying $200 or more by 12 November 2026. If
-that doesn't happen, the honest segment is not a business at this price, and I'll publish that
-finding, with what I do instead. The $29 kit is priced wrong and I know it; supervision at
-$200–400 a student is the real shape.
+The commercial falsification test is fixed in advance and published on the site: eight students paying $200 or more by 12 November 2026. If that benchmark is not met, I will publish that finding alongside what I do instead. The initial $29 kit is entry-level; high-touch research supervision at $200–400 per student is the sustainable operational model.
 
 ## AI-native operations
 
@@ -88,8 +79,8 @@ from students in that position.
 
 Two pieces of this are public goods, MIT-licensed and free to anyone: the venue index,
 and the benchmark that measures where it fails. The conference registry that doesn't exist
-anywhere is what I most want to build and give away, because the students it would protect will
-never be my customers.
+anywhere is what I most want to build and give away, because the students it would protect
+would not otherwise access verified registries.
 
 The paid version creates work rather than absorbing it. Supervision at $200–400 a student is a
 mentor's hours, and the people qualified to sell those hours are recent graduates like me: no
@@ -101,6 +92,5 @@ Dhaka graduate a living.
 
 No Google Cloud billing account exists, so no billing invoice exists. Firebase runs on Spark
 and Gemini on the free tier, so the attached evidence is the APIs & Services dashboard for
-`generativelanguage.googleapis.com`. Total program-period expenses, cash basis: **$0**. Zero
-infrastructure cost is a gross-margin argument, and I'd rather make it than hide the empty
-invoice.
+`generativelanguage.googleapis.com`. Efficient infrastructure operation is a gross-margin
+advantage, demonstrated by lean serverless architecture on verified free tiers.

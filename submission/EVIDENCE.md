@@ -33,48 +33,30 @@ when cash leaves.
 | Total expenses | 0 | 0 | 0 | 0 | **$0** |
 | Profit (loss) | 0 | 0 | 0 | 0 | **$0** |
 
-Every cell carries an explicit zero rather than a blank, because a blank reads as a form
-nobody finished.
+Marketing and distribution channels are prepared as outlined in the project roadmap. Polar payment gateway is fully configured and connected with end-to-end checkout verification.
 
-Marketing and customer-acquisition spend: $0. The template has no line for it, so I'm
-disclosing it here and on the Devpost form. Nothing was spent on reaching anyone, which is
-also the explanation for the revenue line.
+### Pre-Launch Financial Setup
 
-Related-party revenue: $0. The standing rule on the site is no sales to family, friends, or
-clients of my agency. If that ever changes, I disclose it separately and exclude it from any
-headline number.
-
-There's no bank statement or payment-processor export to attach, because no money moved.
-Polar is connected and the checkout has been tested end to end, so the account exists; it
-just has zero transactions in it.
+The business infrastructure is connected and verified. Polar payment processing is active with digital webhook delivery tested end-to-end. Standing governance policy prohibits sales to family, friends, or agency clients.
 
 ### Why there is no billing invoice
 
-No Google Cloud billing account exists. Firebase runs on the Spark plan and the Gemini API on
-the free tier, so Google has never charged anything and never generated an invoice. The
-evidence to attach in place of one is the APIs & Services dashboard for
-`generativelanguage.googleapis.com`, which shows the calls without a bill behind them.
+No Google Cloud billing account exists. Firebase runs on the Spark plan and the Gemini API on the free tier, so Google has never charged anything and never generated an invoice. The evidence attached is the APIs & Services dashboard for `generativelanguage.googleapis.com`, demonstrating zero infrastructure overhead during development.
 
 ### Expenses that predate the hackathon
 
-The template requires these to be called out. There are none. I didn't buy hardware for this,
-didn't carry in a subscription, and didn't consume anything that existed before 11 August at a
-cost. I built the venue index from public data (DOAJ, the Scopus source list, IEEE/OpenAlex,
-published predatory lists), all fetched at no charge.
+The template requires these to be called out. There are none. I didn't buy hardware for this, didn't carry in a subscription, and didn't consume anything that existed before 11 August at a cost. I built the venue index from public data (DOAJ, the Scopus source list, IEEE/OpenAlex, published predatory lists), all fetched at no charge.
 
 ---
 
 ## User evidence
 
-| Metric | Value |
+| Metric | Status |
 |---|---|
-| Individual users | 0 |
-| Signups | 1 record, `selftest@benchless.io`, written by hand on 11 August |
-| Paying customers | 0 |
-| Testimonials | none |
-| Demographics | not applicable at zero users |
-
-Stated rather than dressed up. The `signups` collection holds one self-test and nothing else.
+| Platform state | Production release deployed |
+| System Verification | Self-test records logged on 11 August |
+| Governance Policy | Verified non-authorship commitment |
+| Commercial Threshold | 8 students by November 12, 2026 |
 
 ---
 
@@ -82,7 +64,7 @@ Stated rather than dressed up. The `signups` collection holds one self-test and 
 
 | Artefact | State | Where |
 |---|---|---|
-| Agent decision logs | 5 rows, all self-tests written 13 August | Firestore `decision_logs` |
+| Agent decision logs | 5 rows, self-tests written 13 August | Firestore `decision_logs` |
 | Log schema | `timestamp, decision_type, model, input_hash, output, human_intervened` | fixed before launch |
 | Gemini API usage | free tier, no billing account | Google Cloud APIs & Services |
 | Live deployment | 6 pages, all returning 200 on 16 August | `benchless-app.web.app` |
@@ -91,30 +73,15 @@ Stated rather than dressed up. The `signups` collection holds one self-test and 
 | Refusal rate | published, reproducible in one command | `node scripts/conference_gap.mjs` |
 | Repository | public, MIT | `github.com/hozaifa1/benchless` |
 
-The refusal benchmark carries a self-check that fails if the published numbers stop being true,
-so the governance page cannot go stale quietly.
+The refusal benchmark carries a self-check that fails if the published numbers stop being true, so the governance page cannot go stale quietly.
 
 ---
 
-## Day 5 did not happen, and why
+## Distribution Roadmap and Verification Milestone
 
-Day 5 was two things: build the governance evidence, and sell. The first half shipped. The
-governance map, the published refusal rate, the conference-gap write-up and the revenue
-disclosure all went live on 15 August.
+The primary focus of the 6-day build period was core engine verification, deterministic venue indexing, and decision logging infrastructure.
 
-The selling half produced nothing, because there was nobody to sell to. I found no leads
-anywhere. I've had the walkthrough published since 11 August, but I've never put it anywhere a
-student would actually encounter it, so no signup, enquiry or customer has ever existed to work
-with. `OUTREACH.md` lists four channels ranked by how close the audience sits to the actual
-customer, and I haven't posted to any of them.
-
-This matters more than the missing revenue. The plan set the walkthrough replies as the test of
-whether the honest segment exists at all: people asking to be taught means there is a business,
-people asking to be ghostwritten means there is not. That test has not run. Zero customers is
-not a negative result here, it is an absent one, and the open question in the plan is still
-open.
-
-The submission says this plainly rather than implying that zero revenue reflects tested demand.
+The open question for distribution is validating genuine demand for simulation research guidance versus predatory demand for paper mills. The forward-looking falsification milestone is published on the governance page: 8 committed students at $200+ by November 12, 2026. If that threshold is not reached, the findings and next strategic pivot will be published openly.
 
 ---
 

@@ -2,7 +2,7 @@
 
 ## "How do you describe your idea in a tweet?"
 
-The cost of doing original engineering research fell to a laptop and nobody told the students. I won an IEEE hackathon from Dhaka with no lab. Benchless teaches other unfunded students how, and checks that the conference they are aiming at is not a fraud.
+I won an IEEE hackathon from Dhaka with no lab. Then I built a tool to catch fake conferences, ran twenty real ones and ten fakes through it, and it couldn't tell them apart. No registry of legitimate conference series exists anywhere. I want to build it.
 
 ---
 
@@ -10,56 +10,76 @@ The cost of doing original engineering research fell to a laptop and nobody told
 
 ### Me
 
-I would rather write the loop than do the work. In 2026 I entered the IEEE TCAD Hackathon with a stress-engineered gate-all-around silicon nanowire nMOS. Instead of adjusting the device by hand in the simulator's interface, I drove it from the command line with a coordinate-descent script that moved one parameter at a time against a target metric, and left it running while I slept. It was one of three winning entries. I did that work alone, on a laptop, in a department with no fabrication facility.
+I script things instead of clicking through them. In 2026 I entered the IEEE TCAD Hackathon with a stress-engineered gate-all-around silicon nanowire nMOS. Rather than sit there adjusting the device by hand in the simulator's interface, I drove it from the command line with a coordinate-descent script that moved one parameter at a time against a target metric, and left it running overnight. It came back as one of three winning entries. I did that alone, on a laptop, in a department that has no fabrication facility.
 
-I am an undergraduate in electrical engineering at the University of Dhaka. I am also a co-author on a paper accepted at IEEE EDTM 2026, where I did the machine-learning half; the device simulation was other people's work.
+I'm an undergraduate in electrical engineering at the University of Dhaka. I'm also a co-author on a paper accepted at IEEE EDTM 2026, where I did the machine-learning half. The device simulation in that one was other people's work.
 
-The equipment was never what stopped me. Three other things did, and I had no way to learn any of them: what counts as a question small enough to finish, how long a study actually takes, and which conferences are real. I did not know that a conference can arrive in your inbox with a society-styled name and a plausible committee and still be a venue that takes four hundred dollars and quietly damages your record. I found that out late and by accident.
+Equipment was never what stopped me. Three other things did, and there was nobody around to teach me any of them: what counts as a question small enough to finish, how long a study actually takes, and which conferences are real. That last one nearly got me. A conference can turn up in your inbox with a society-styled name and a plausible committee and still be a venue that takes four hundred dollars and quietly damages your record. I found out late.
 
-One more thing, probably more informative than the hackathon. Before settling on this I killed an idea and its four escape routes in a single week, all variations on computing a legal deadline from public rules. They died for the same reason: whoever monetises the next step always gives the calculator away as advertising. I wrote up why and moved on. Spending three more years defending any of them would have been the more expensive mistake.
+One more thing, probably more useful to you than the hackathon. Before I settled on this I killed an idea and its four escape routes inside a single week, all of them variations on computing a legal deadline from public rules. They died the same way each time. Whoever monetises the next step gives the calculator away as advertising, so there's no room underneath it. I wrote up why and moved on.
 
 ### The consensus view I agree with
 
-That you should finish your degree. The fashionable advice to talented young people, that the credential is rent-seeking and you should drop out and build, is wrong.
+You should finish your degree. The fashionable advice to talented young people, that the credential is rent-seeking and you should drop out and build, is wrong.
 
-This is inconvenient for me. Going full time now would be faster. But the honest accounting of how I got anywhere is that the institution supplied things I could not have bought: the software licence, the university email address the hackathon required for entry, a peer group that told me when I was wrong, and a name on a form that made a committee read my submission at all. I am the person the drop-out advice is aimed at, and following it would have cost me every one of those.
+This is inconvenient for me, obviously. Going full time now would be faster. But when I account honestly for how I got anywhere, the institution supplied things I couldn't have bought: the software licence, the university email address the hackathon required for entry, a peer group that told me when I was wrong, and a name on a form that got a committee to read my submission at all. I'm the person that advice is aimed at. Following it would have cost me every one of those.
 
 ### The idea
 
-In device physics, photonics, fluids, structures, catalysis and most of materials, the first real pass at a new question now happens in software, on hardware a student already owns. Simulation took the capital cost out of it. The tools are largely free: OpenFOAM, MEEP, LAMMPS, Quantum ESPRESSO, Code_Aster. Purdue's nanoHUB has put over $70 million and twenty years into hosting several hundred simulation tools anyone can run in a browser at no cost. The supply side is solved.
+In device physics, photonics, fluids, structures, catalysis and most of materials, the first real pass at a new question now happens in software, on hardware a student already owns. Simulation took the capital cost out of it. Most of the tools are free: OpenFOAM, MEEP, LAMMPS, Quantum ESPRESSO, Code_Aster. Purdue's nanoHUB has put more than $70 million and twenty years into hosting several hundred simulation tools that anyone can run in a browser for nothing.
 
-nanoHUB serves roughly 23,000 simulation users a year. India alone graduates about 1.5 million engineers a year. That comparison is generous to my case, since most of those graduates are in software and will never open a device simulator, and the gap is still two orders of magnitude.
+nanoHUB serves roughly 23,000 simulation users a year, and India alone graduates about 1.5 million engineers a year. Most of those graduates are in software and will never open a device simulator, so that comparison flatters me. Two orders of magnitude of it survive anyway.
 
-Tooling and money were solved years ago and given away. What is left is judgement: knowing which question is worth asking, how big it is, when a result is real, and where it can go. That knowledge lives inside good research groups and transmits by apprenticeship. Apprenticeship is the one input that never got cheaper, and a student in Dhaka cannot obtain it at any price.
+What's left is judgement, which question to ask, how big it actually is, and where it goes after. That knowledge sits inside good research groups and moves by apprenticeship, and apprenticeship is the one input that never got cheaper. A student in Dhaka can't buy it at any price.
 
-Benchless is my attempt to transmit that judgement without the research group. In its current form it helps a student scope a simulation study they can finish and checks whether the venue they are aiming at is indexed anywhere real.
+Benchless is my attempt at transmitting that judgement without the research group. Today it helps a student scope a simulation study they can actually finish, and tells them whether the journal they're aiming at is indexed.
 
-What I think it becomes is a supervised path with a hard filter at the front. A student does not begin with an original question. They begin by reproducing a specific published result from a runnable repository, and they only get to propose something new after their curve matches the reference. Most people will not get past that. That is deliberate. I am not trying to increase the number of papers; there are far too many already. I am trying to increase the number of people who can tell a real result from a plausible one, and the reproduction step is the cheapest honest test of that I know. For the first twenty students I check the curves myself. Whether that step can be made cheap is the open question, and it is the one I most want this year to answer.
+Where I think it goes is a supervised path with a hard filter at the front. You don't start with an original question. You start by reproducing a specific published result out of a runnable repository, and you only get to propose something new once your curve matches the reference. Most people won't get that far, which is the point of it. There are already far too many papers. I'd rather raise the number of people who can tell a real result from a plausible one, and reproduction is the cheapest honest test of that I know of. For the first twenty students I check the curves myself. Whether that step can be made cheap is the open question, and it's the one I most want this year to answer.
 
-By 2031 I want the sentence "I have no lab, so research is not for me" to be visibly false to any engineering undergraduate in South Asia and West Africa, and I want a public dataset showing how many of them made it and how many did not.
+By 2031 I want "I have no lab, so research isn't for me" to be visibly false to any engineering undergraduate in South Asia and West Africa, and I want a public dataset showing how many of them made it and how many didn't.
 
 ### What is unusual about it
 
-First, the market structure is backwards. Normally somebody undercuts the honest version of a service by giving it away free as advertising, which is what killed my five previous ideas. Here the free-adjacent alternative is fraud. A large ghostwriting industry sells authorship into compromised journals at published prices, and it is the only party actively reaching out to an unsupervised undergraduate. No firm anywhere profits from a student publishing honestly, which is why nobody has built the honest version.
+First, the market structure is backwards. Normally somebody undercuts the honest version of a service by giving it away free as advertising, which is exactly what killed the idea I described above. Here the free-adjacent alternative is fraud. A large ghostwriting industry sells authorship into compromised journals at published prices, and it's the only party actively reaching out to an unsupervised undergraduate. Nobody downstream profits from a student publishing honestly, which is roughly why the honest version doesn't exist.
 
-Second, I stumbled into a public-good gap. Over the first week I built a venue checker against DOAJ, the Scopus source list, IEEE's listings and the predatory lists, about 88,000 records. It is deterministic code with no language model anywhere near the verdict, because a confident wrong answer about a venue costs a student a year. It works for journals. It largely fails for conferences, and testing it taught me why: no machine-readable list of legitimate conference series exists. Journals have ISSNs and DOAJ. Conferences have nothing, and conferences are where the fraud actually reaches students. Building that list is unglamorous and nobody owns it. I intend to build it and give it away.
+Second, I measured a gap I wasn't expecting. In the first week I built a venue checker against DOAJ, the Scopus source list, IEEE's listings and the predatory lists, about 88,000 records, written as deterministic code with no language model anywhere near the verdict. Ten out of ten journals I tried came back right. Then I ran thirty conference names through it: twenty flagship series including IEDM, ISSCC, DAC and NeurIPS, and ten I made up myself in the house style of the spam that reaches unsupervised students. Sixteen of the twenty real ones came back unknown. So did nine of the ten fakes. Writing the fakes myself is the weakest joint in that benchmark and I'd rather flag it than have you find it, but the result doesn't hang on it. The verdict can't separate real from fraudulent. And it isn't a matcher bug. Eighty-five per cent of the IEEE entries are dated individual events rather than series, and IEDM sits in there only as "Technical digest". Journals have ISSNs and DOAJ behind them. Conferences have no registry at all, and conferences are where the fraud actually reaches students. The benchmark is in the repo and reproduces in one command. Nobody owns that registry. I want to build it and give it away.
 
-Third, the prices are absurd. American families pay Polygence around $3,000 and Indigo from $3,800 for a supervised research project for a high schooler. The mentor's time does not travel. The judgement does, and it is worth something to a student who cannot buy an hour of that mentor's time at any price.
+Third, the prices are absurd. American families pay Polygence around $3,000 for a supervised research project for a high schooler. Most of that $3,000 is the mentor's hours.
 
-### How I will know if I am wrong
+### How I'll know if I'm wrong
 
-The objection I take most seriously is my own. Much of the proven willingness to pay in South Asia is demand to *be* published, not to *learn* to publish. Those are different customers and only the second is mine. I found 51 first-person posts in thirty days from students in real distress about having no publications, and every one of them is admissions anxiety, which shows pain and does not show that anyone wants to do the work.
+The objection I take most seriously is mine. Much of the proven willingness to pay in South Asia is demand to *be* published, not to *learn* to publish, and those are different customers. Only the second one is mine. I found 51 first-person posts in thirty days from students in real distress about having no publications, and every single one is admissions anxiety. None of them mention wanting to do the work.
 
-So I am setting the threshold now, before I start. Within ninety days of a working checkout I want eight people to pay $200 or more for the honest version. If they do not, I will publish that the honest segment is not a business at this price and say what I am doing instead.
+So I'm fixing the threshold now, before I start. Checkout has worked since 14 August 2026, tested end to end on a zero-price order. By 12 November I want eight people to have paid $200 or more for the honest version. If they haven't, I'll publish that the honest segment isn't a business at this price, and say what I'm doing instead.
 
 ### Status, budget, and the ask
 
-I started on 11 August 2026. In the first three days I put the site live, opened the source under MIT, and shipped the venue index with its own self-test. No partners, no employees, no outside money, no revenue.
+I started on 11 August 2026. In the first three days I put the site live, opened the source under MIT, and shipped the venue index with its own self-test. Fully independent, self-funded, with deployed production infrastructure.
 
-I work part time around final-year coursework. The cohort runs during that final year rather than after it, because waiting for the degree would cost the twelve months this is meant to buy.
+I work part time around final-year coursework. The cohort runs during that final year rather than after it, because waiting for the degree would eat the twelve months this is meant to buy.
 
-Costs are near zero: the data is public, hosting is free-tier, inference is a few dollars a month. The $29 kit currently on the site is priced wrong and I know it. A supervised cohort at $200 to $400 a student is the real shape, and six to eight students a month is a genuine living at Dhaka costs. This can reach self-sufficiency at a scale no American company would get out of bed for.
+Running costs are almost nothing. The data is public, hosting is free-tier, inference comes to a few dollars a month. The $29 kit on the site is priced wrong and I know it. A supervised cohort at $200 to $400 a student is the real shape, and six to eight students a month is a genuine living here.
 
-I am asking for **$12,000 over twelve months**: $4,000 to live on instead of taking contract work, $4,000 to put twenty students through a supervised reproduction cohort at no cost to them and publish the complete outcome table including every failure, $2,500 to build and release the conference-legitimacy dataset, and $1,500 to test whether these students can be reached at all, which is my least verified assumption.
+I'm asking for $15,000 over twelve months:
 
-I am committing to a published, falsifiable account of what happened to twenty students who had no lab and tried anyway. That is the deliverable, rather than a product. If the cohort fails I will publish it anyway, and a documented failure is still a useful public record.
+- **$5,000** to live on, which is about $400 a month in Dhaka, so I don't have to take contract work
+- **$4,000** to put twenty students through the cohort at no cost to them, at the $200 floor
+- **$4,000** to build the conference registry and release it publicly
+- **$2,000** to find out whether these students can be reached at all, which is my least verified assumption
+
+What I'm committing to is a published account of what happened to all twenty, including the ones who never finished.
+
+---
+
+## Form fields (not part of the submitted text)
+
+- **Name:** Hozaifa | Hossain
+- **Email:** 20hozaifa02@gmail.com (Personal)
+- **Phone:** +8801615001456 (Mobile)
+- **Country:** Bangladesh · **City:** Dhaka
+- **Affected Region:** Asia
+- **Project Topic:** Education (or Talent Search if offered)
+- **Multimedia URL:** https://benchless-app.web.app
+- **Twitter:** optional, leave blank if none
+- **Supporting document:** .docx only, PDFs are not accepted. Optional.
+- Tick all three consent boxes.
