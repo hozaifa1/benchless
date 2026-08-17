@@ -21,16 +21,26 @@ export const PRODUCT_ID = PRODUCTS.kit;
 export const ALLOWED_ORIGINS = [
   'https://benchless-app.web.app',
   'https://benchless-app.firebaseapp.com',
-  'http://localhost:5000'
+  'https://benchless.vercel.app',
+  'http://localhost:5000',
+  'http://localhost:3000'
 ];
+
+export function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  if (ALLOWED_ORIGINS.includes(origin)) return true;
+  if (/^https:\/\/benchless(-[a-z0-9-]+)?\.vercel\.app$/.test(origin)) return true;
+  if (/^http:\/\/localhost:[0-9]+$/.test(origin)) return true;
+  return false;
+}
 
 export function corsHeaders(origin) {
   const h = {
     'Vary': 'Origin',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type'
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, webhook-id, webhook-timestamp, webhook-signature'
   };
-  if (ALLOWED_ORIGINS.includes(origin)) h['Access-Control-Allow-Origin'] = origin;
+  if (isAllowedOrigin(origin)) h['Access-Control-Allow-Origin'] = origin;
   return h;
 }
 

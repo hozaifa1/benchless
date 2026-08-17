@@ -1,5 +1,20 @@
+# Dependencies & VCS
 node_modules/
-scripts/
 .firebase/
+.git/
+
+# Development & extraction scripts
+scripts/
+
+# Large submission videos, audio, and documents
 submission/
-*.md
+*.mp4
+*.mp3
+*.wav
+*.pdf
+
+# Internal project documentation
+EV-application.md
+OUTREACH.md
+PLAN.md
+form-submissions.md

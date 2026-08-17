@@ -1,11 +1,11 @@
 {
-  "name": "gemini-xprize",
+  "name": "benchless",
   "version": "1.0.0",
-  "description": "",
+  "description": "Deterministic simulation research scoping and academic venue validation platform.",
   "main": "index.js",
   "scripts": {
-    "build": "echo 'Build complete'",
-    "test": "node scripts/conference_gap.mjs"
+    "build": "echo \"Static build ready in public/\"",
+    "test": "node scripts/check_venue.mjs --selfcheck"
   },
   "repository": {
     "type": "git",

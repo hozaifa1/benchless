@@ -8,8 +8,18 @@ const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODE
 const ALLOWED_ORIGINS = [
   'https://benchless-app.web.app',
   'https://benchless-app.firebaseapp.com',
-  'http://localhost:5000'
+  'https://benchless.vercel.app',
+  'http://localhost:5000',
+  'http://localhost:3000'
 ];
+
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  if (ALLOWED_ORIGINS.includes(origin)) return true;
+  if (/^https:\/\/benchless(-[a-z0-9-]+)?\.vercel\.app$/.test(origin)) return true;
+  if (/^http:\/\/localhost:[0-9]+$/.test(origin)) return true;
+  return false;
+}
 
 const SCHEMA = {
   type: 'object',
@@ -49,10 +59,10 @@ const clean = (v, fallback = '') => String(v ?? fallback).slice(0, MAX_LEN);
 
 module.exports = async (req, res) => {
   const origin = req.headers.origin;
-  if (ALLOWED_ORIGINS.includes(origin)) res.setHeader('Access-Control-Allow-Origin', origin);
+  if (isAllowedOrigin(origin)) res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });

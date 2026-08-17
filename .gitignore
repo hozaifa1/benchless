@@ -11,8 +11,12 @@ OUTREACH.md
 2026-08-09-Build-with-Gemini-XPRIZE-deep-research.md
 
 # Firebase / Logs
+.firebase/
 firebase-debug.log
 *.log
+
+# Heavy submission assets (videos, screenshots)
+submission/
 
 # Venue corpus. Raw fetches are large and regenerable via scripts/fetch_*.js;
 # public/data/index/ is the built lookup and IS deployed to Hosting, so it stays tracked.
